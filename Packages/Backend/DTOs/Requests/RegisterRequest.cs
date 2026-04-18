@@ -22,6 +22,6 @@ namespace Backend.DTOs.Requests
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$",
 			ErrorMessage = "Password must contain uppercase, lowercase, number and special character")]
 		public required string Password { get; set; }
-		public RoleTypeEnum Role { get; set; } = RoleTypeEnum.USER;
+		public List<RoleTypeEnum> Roles { get; set; } = new List<RoleTypeEnum>();
 	}
 }

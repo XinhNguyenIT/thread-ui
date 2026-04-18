@@ -3,6 +3,8 @@ using Backend.Dataset;
 using Backend.Dataset.Dev;
 using Backend.Dataset.Interfaces;
 using Backend.Dataset.Stag;
+using Backend.DTOs.Internals;
+using Backend.Extensions;
 using Backend.Infrastructure;
 using Backend.Middlewares;
 using Backend.Models;
@@ -14,6 +16,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,12 +46,20 @@ builder.Services.AddScoped<SeedDataFactory>();
 builder.Services.AddScoped<IdentitySeeder>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
+//Unit of work
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 //Repositories
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGenericRepository<RefreshToken>, RefreshTokenRepository>();
 
-//Service
+//Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+//Internal DTOs
+builder.Services.AddScoped<UserContext>();
 
 var app = builder.Build();
 
@@ -57,6 +69,11 @@ if (await CliHandler.HandleAsync(app, args))
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseMiddleware<UserContextMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

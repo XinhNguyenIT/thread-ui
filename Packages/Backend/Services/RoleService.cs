@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Enums;
+using Backend.Models;
 using Backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -40,6 +41,11 @@ namespace Backend.Services
 		public Task<IdentityRole?> GetByNameAsync(string roleName)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<List<RoleTypeEnum>> GetByUserAsync(User user)
+		{
+			return await _roleRepository.GetByUserAsync(user);
 		}
 	}
 }

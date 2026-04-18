@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 using Backend.Enums;
@@ -22,12 +23,22 @@ namespace Backend.Mappers
 			};
 		}
 
-		public static RegisterResponse ToRegisterResponse(User user, RoleTypeEnum role)
+		public static AuthInternal ToAuthInternal(User user, List<RoleTypeEnum> roles, List<TokenReturn> tokens)
 		{
-			return new RegisterResponse
+			return new AuthInternal
 			{
 				Email = user.Email,
-				Role = role,
+				Roles = roles,
+				Tokens = tokens,
+			};
+		}
+
+		public static AuthResponse ToAuthResponse(AuthInternal user)
+		{
+			return new AuthResponse
+			{
+				Email = user.Email,
+				Role = user.Roles,
 			};
 		}
 	}
