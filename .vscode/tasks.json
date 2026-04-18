@@ -4,9 +4,9 @@
     {
       "label": "Run update database",
       "type": "shell",
-      "command": "dotnet ef database update",
+      "command": "./Scripts/update_db.sh",
       "options": {
-        "cwd": "${workspaceFolder}/Backend"
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": "$msCompile"
     },
@@ -27,6 +27,24 @@
         "cwd": "${workspaceFolder}"
       },
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Seed initial database",
+      "type": "shell",
+      "command": "./Scripts/seed_data.sh",
+      "args": ["${input:env}"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "env",
+      "type": "pickString",
+      "description": "Choose environment",
+      "options": ["dev", "stag"]
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 set -e
 
-cd Backend || exit
+cd Packages/Backend || exit
 
 echo "🔨 Building..."
 dotnet build

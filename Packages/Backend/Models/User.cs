@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
-namespace Backend.Models;
-
-public partial class User
+namespace Backend.Models
 {
-    public int UserId { get; set; }
+	public class User : IdentityUser
+	{
+		public string? FirstName { get; set; }
+		public string? LastName { get; set; }
 
-    public string Name { get; set; } = null!;
-
-    public string? Description { get; set; }
-
-    public string? Avatar { get; set; }
-
-    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
-
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    public virtual ICollection<RelationshipFromUserToUser> RelationshipFromUserToUserFromUsers { get; set; } = new List<RelationshipFromUserToUser>();
-
-    public virtual ICollection<RelationshipFromUserToUser> RelationshipFromUserToUserToUsers { get; set; } = new List<RelationshipFromUserToUser>();
-
-    public virtual ICollection<UserVideoLike> UserVideoLikes { get; set; } = new List<UserVideoLike>();
-
-    public virtual ICollection<Video> Videos { get; set; } = new List<Video>();
+		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+		public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
+		public virtual ICollection<Friendship> FriendshipRequests { get; set; } = new List<Friendship>();
+		public virtual ICollection<Friendship> FriendshipResponses { get; set; } = new List<Friendship>();
+		public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+		public virtual ICollection<Story> Stories { get; set; } = new List<Story>();
+		public virtual ICollection<PostReport> CreateReport { get; set; } = new List<PostReport>();
+		public virtual ICollection<Notification> SentNotifications { get; set; } = new List<Notification>();
+		public virtual ICollection<Notification> ReceiveNotifications { get; set; } = new List<Notification>();
+	}
 }
