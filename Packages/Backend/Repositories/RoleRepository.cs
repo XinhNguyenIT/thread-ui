@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Enums;
+using Backend.Models;
 using Backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +13,13 @@ namespace Backend.Repositories
 	public class RoleRepository : IRoleRepository
 	{
 		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly UserManager<User> _userManager;
 
-		public RoleRepository(RoleManager<IdentityRole> roleManager)
+
+		public RoleRepository(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
 		{
 			_roleManager = roleManager;
+			_userManager = userManager;
 		}
 
 		public async Task<bool> CreateRoleAsync(string roleName)
@@ -48,6 +53,17 @@ namespace Backend.Repositories
 		public async Task<IdentityRole?> GetByNameAsync(string roleName)
 		{
 			return await _roleManager.FindByNameAsync(roleName);
+		}
+
+		public async Task<List<RoleTypeEnum>> GetByUserAsync(User user)
+		{
+			var roles = await _userManager.GetRolesAsync(user);
+
+			return roles
+				.Select(r => Enum.TryParse<RoleTypeEnum>(r, ignoreCase: true, out var role) ? role : (RoleTypeEnum?)null)
+				.Where(r => r.HasValue)
+				.Select(r => r!.Value)
+				.ToList();
 		}
 	}
 }

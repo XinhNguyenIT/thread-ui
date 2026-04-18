@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Backend.Common;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
+using Backend.Enums;
+using Backend.Helpers;
+using Backend.Mappers;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,15 +30,31 @@ namespace Backend.Controllers
         {
             var result = await _authService.Register(request);
 
-            return Ok(ApiResponse<RegisterResponse>.SuccessResponse(result, "Registration successful"));
+            foreach (var token in result.Tokens)
+            {
+                var cookieName = token.Type == TokenTypeEnum.ACCESS ? "access" : "refresh";
+                CookieHelper.SetSecureCookie(Response, cookieName, token.Token, token.Expires);
+            }
+
+            var response = UserMapper.ToAuthResponse(result);
+
+            return Ok(ApiResponse<AuthResponse>.SuccessResponse(response, "Registration successful"));
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            await _authService.Login(request);
+            var result = await _authService.Login(request);
 
-            return Ok(ApiResponse<string>.SuccessResponse(null, "Login success"));
+            foreach (var token in result.Tokens)
+            {
+                var cookieName = token.Type == TokenTypeEnum.ACCESS ? "access" : "refresh";
+                CookieHelper.SetSecureCookie(Response, cookieName, token.Token, token.Expires);
+            }
+
+            var response = UserMapper.ToAuthResponse(result);
+
+            return Ok(ApiResponse<AuthResponse>.SuccessResponse(response, "Login success"));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Backend.Models
 		public DbSet<PostHashtag> PostHashtags { get; set; }
 		public DbSet<PostReport> PostReports { get; set; }
 		public DbSet<Story> Stories { get; set; }
+		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -138,6 +139,13 @@ namespace Backend.Models
 				entity.HasOne(pr => pr.User)
 						.WithMany(u => u.CreateReport)
 						.HasForeignKey(pr => pr.UserId);
+			});
+
+			builder.Entity<RefreshToken>(entity =>
+			{
+				entity.HasOne(r => r.User)
+						.WithMany(u => u.RefreshTokens)
+						.HasForeignKey(r => r.UserId);
 			});
 		}
 	}

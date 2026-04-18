@@ -1,3 +1,4 @@
+using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 
@@ -5,7 +6,7 @@ namespace Backend.Services.Interfaces;
 
 public interface IAuthService
 {
-	Task Login(LoginRequest item);
+	Task<AuthInternal> Login(LoginRequest item);
 	Task Logout(int userId);
-	Task<RegisterResponse> Register(RegisterRequest request);
+	Task<AuthInternal> Register(RegisterRequest request);
 }
