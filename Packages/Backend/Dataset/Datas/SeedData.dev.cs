@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Backend.Dataset.Interfaces;
 using Backend.Models;
 
-namespace Backend.Dataset.Dev
+namespace Backend.Dataset.Datas
 {
 	public class DevSeedData : ISeedData
 	{
