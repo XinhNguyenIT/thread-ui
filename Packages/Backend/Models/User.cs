@@ -6,6 +6,7 @@ namespace Backend.Models
 	{
 		public string? FirstName { get; set; }
 		public string? LastName { get; set; }
+		public string? AvatarSrc { get; set; }
 
 		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 		public virtual ICollection<Like> Likes { get; set; } = new List<Like>();

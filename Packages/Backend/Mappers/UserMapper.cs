@@ -30,6 +30,9 @@ namespace Backend.Mappers
 				Email = user.Email,
 				Roles = roles,
 				Tokens = tokens,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				AvatarSrc = user.AvatarSrc
 			};
 		}
 
@@ -39,6 +42,9 @@ namespace Backend.Mappers
 			{
 				Email = user.Email,
 				Role = user.Roles,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				AvatarSrc = user.AvatarSrc
 			};
 		}
 	}

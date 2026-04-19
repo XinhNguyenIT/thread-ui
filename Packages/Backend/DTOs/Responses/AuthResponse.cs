@@ -10,6 +10,10 @@ namespace Backend.DTOs.Responses
 	public class AuthResponse
 	{
 		public string? Email { get; set; }
+		public string? LastName { get; set; }
+		public string? FirstName { get; set; }
+		public string? AvatarSrc { get; set; }
+
 		public required List<RoleTypeEnum> Role { get; set; }
 	}
 }
