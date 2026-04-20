@@ -3,6 +3,7 @@ using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 using Backend.Exceptions;
 using Backend.Mappers;
+using Backend.Models;
 using Backend.Repositories.Interfaces;
 using Backend.Services.Interfaces;
 
@@ -11,14 +12,25 @@ namespace Backend.Services
 	public class AuthService : IAuthService
 	{
 		private readonly IUserRepository _userRepository;
+		private readonly UserContext _userContext;
 		private readonly IRoleRepository _roleRepository;
 		private readonly IJwtService _jwtService;
+		private readonly UserMapper _userMapper;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public AuthService(IUserRepository userRepository, IRoleRepository roleRepository, IJwtService jwtService)
+		public AuthService(IUserRepository userRepository,
+							IRoleRepository roleRepository,
+							IJwtService jwtService,
+							UserContext userContext,
+							IUnitOfWork unitOfWork,
+							UserMapper userMapper)
 		{
 			_userRepository = userRepository;
 			_roleRepository = roleRepository;
 			_jwtService = jwtService;
+			_userContext = userContext;
+			_unitOfWork = unitOfWork;
+			_userMapper = userMapper;
 		}
 		public async Task<AuthInternal> Login(LoginRequest item)
 		{
@@ -28,7 +40,7 @@ namespace Backend.Services
 
 			var tokens = await _jwtService.CreateTokenForUser(result, roles);
 
-			var response = UserMapper.ToAuthInternal(result, roles, tokens);
+			var response = _userMapper.ToAuthInternal(result, roles, tokens);
 
 			return response;
 		}
@@ -36,6 +48,21 @@ namespace Backend.Services
 		public Task Logout(int userId)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<AuthInternal> Me()
+		{
+			var userId = _userContext.UserId;
+
+			var currentUser = await _userRepository.GetByIdAsync(userId) ?? throw new BadHttpRequestException("User not found");
+
+			var roles = await _roleRepository.GetByUserAsync(currentUser);
+
+			var tokens = await _jwtService.CreateTokenForUser(currentUser, roles);
+
+			var response = _userMapper.ToAuthInternal(currentUser, roles, tokens);
+
+			return response;
 		}
 
 		public async Task<AuthInternal> Register(RegisterRequest request)
@@ -50,15 +77,28 @@ namespace Backend.Services
 				throw new BadHttpRequestException("Role not found");
 			}
 
-			var newUser = UserMapper.ToModel(request);
+			var newUser = _userMapper.ToModel(request);
 
-			var result = await _userRepository.CreateUserAsync(newUser, request.Password, request.Roles);
+			await _unitOfWork.BeginTransactionAsync();
 
-			var tokens = await _jwtService.CreateTokenForUser(result, request.Roles);
+			try
+			{
+				var createdUser = await _userRepository.CreateUserAsync(newUser, request.Password);
 
-			var response = UserMapper.ToAuthInternal(result, request.Roles, tokens);
+				await _roleRepository.AddRoleToUser(createdUser, request.Roles);
 
-			return response;
+				var tokens = await _jwtService.CreateTokenForUser(createdUser, request.Roles);
+
+				var response = _userMapper.ToAuthInternal(createdUser, request.Roles, tokens);
+
+				await _unitOfWork.CommitAsync();
+				return response;
+			}
+			catch (Exception)
+			{
+				await _unitOfWork.RollbackAsync();
+				throw;
+			}
 		}
 	}
 }

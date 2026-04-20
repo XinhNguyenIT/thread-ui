@@ -9,9 +9,17 @@ public class UnitOfWork : IUnitOfWork
 	private readonly ThreadDbContext _context;
 	private IDbContextTransaction? _transaction;
 
-	public UnitOfWork(ThreadDbContext context)
+	public IUserRepository UserRepository { get; }
+	public IRefreshTokenRepository RefreshTokenRepository { get; }
+	public IRoleRepository RoleRepository { get; }
+
+
+	public UnitOfWork(ThreadDbContext context, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IRoleRepository roleRepository)
 	{
 		_context = context;
+		UserRepository = userRepository;
+		RefreshTokenRepository = refreshTokenRepository;
+		RoleRepository = roleRepository;
 	}
 
 	public async Task BeginTransactionAsync()

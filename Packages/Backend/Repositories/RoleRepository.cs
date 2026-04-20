@@ -22,6 +22,14 @@ namespace Backend.Repositories
 			_userManager = userManager;
 		}
 
+		public async Task AddRoleToUser(User user, List<RoleTypeEnum> roles)
+		{
+			var roleNames = roles.Select(r => r.ToString()).ToList();
+			var roleResult = await _userManager.AddToRolesAsync(user, roleNames);
+
+			if (!roleResult.Succeeded) throw new BadHttpRequestException("Failed to assign roles.");
+		}
+
 		public async Task<bool> CreateRoleAsync(string roleName)
 		{
 			var roleExist = await _roleManager.RoleExistsAsync(roleName);

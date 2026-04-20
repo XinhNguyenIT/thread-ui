@@ -1,3 +1,4 @@
+using Backend.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Models
@@ -6,6 +7,7 @@ namespace Backend.Models
 	{
 		public string? FirstName { get; set; }
 		public string? LastName { get; set; }
+		public GenderTypeEnum Gender { get; set; } = GenderTypeEnum.Unknown;
 		public string? AvatarSrc { get; set; }
 
 		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();

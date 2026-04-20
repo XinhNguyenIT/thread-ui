@@ -23,7 +23,13 @@ namespace Backend.Models
 		{
 			base.OnModelCreating(builder);
 
-			builder.Entity<User>().ToTable("Users");
+			builder.Entity<User>(entity =>
+			{
+				entity.ToTable("Users");
+
+				entity.Property(n => n.Gender)
+						.HasConversion<string>();
+			});
 
 			builder.Entity<Post>(entity =>
 			{

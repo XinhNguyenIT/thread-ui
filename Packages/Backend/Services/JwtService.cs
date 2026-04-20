@@ -16,12 +16,16 @@ public class JwtService : IJwtService
 {
 	private readonly IConfiguration _config;
 
-	private readonly IGenericRepository<RefreshToken> _refreshRepository;
+	private readonly IGenericRepository<RefreshToken> _refreshGeneric;
+	private readonly IRefreshTokenRepository _refreshRepository;
+	private readonly IUnitOfWork _unitOfWork;
 
-	public JwtService(IConfiguration config, IGenericRepository<RefreshToken> refreshRepository)
+	public JwtService(IConfiguration config, IGenericRepository<RefreshToken> refreshGeneric, IRefreshTokenRepository refreshRepository, IUnitOfWork unitOfWork)
 	{
 		_config = config;
+		_refreshGeneric = refreshGeneric;
 		_refreshRepository = refreshRepository;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> roles)
@@ -44,7 +48,27 @@ public class JwtService : IJwtService
 					ExpiryDate = token.Expires,
 				};
 
-				await _refreshRepository.AddAsync(newRefreshToken);
+				await _unitOfWork.BeginTransactionAsync();
+
+				try
+				{
+					var notRevokedTokens = await _refreshRepository.FindByUserId(user.Id);
+
+					foreach (var notRevokedToken in notRevokedTokens)
+					{
+						await _refreshRepository.RevokeToken(notRevokedToken.Id);
+					}
+
+					await _refreshGeneric.AddAsync(newRefreshToken);
+
+					await _unitOfWork.CommitAsync();
+				}
+				catch (Exception)
+				{
+					await _unitOfWork.RollbackAsync();
+					throw;
+				}
+
 			}
 		}
 
@@ -55,8 +79,8 @@ public class JwtService : IJwtService
 	{
 		var jwt = _config.GetSection("Jwt");
 		var expires = type == TokenTypeEnum.ACCESS ?
-					DateTime.Now.AddMinutes(double.Parse(jwt["AccessTokenMinutes"]!)) :
-					DateTime.Now.AddDays(double.Parse(jwt["RefreshTokenDays"]!));
+					DateTime.UtcNow.AddMinutes(double.Parse(jwt["AccessTokenMinutes"]!)) :
+					DateTime.UtcNow.AddDays(double.Parse(jwt["RefreshTokenDays"]!));
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Key"]!));
 

@@ -7,12 +7,20 @@ using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 using Backend.Enums;
 using Backend.Models;
+using Backend.Services.Interfaces;
 
 namespace Backend.Mappers
 {
 	public class UserMapper
 	{
-		public static User ToModel(RegisterRequest user)
+		private readonly IUrlService _urlService;
+
+		public UserMapper(IUrlService urlService)
+		{
+			_urlService = urlService;
+		}
+
+		public User ToModel(RegisterRequest user)
 		{
 			return new User
 			{
@@ -23,7 +31,7 @@ namespace Backend.Mappers
 			};
 		}
 
-		public static AuthInternal ToAuthInternal(User user, List<RoleTypeEnum> roles, List<TokenReturn> tokens)
+		public AuthInternal ToAuthInternal(User user, List<RoleTypeEnum> roles, List<TokenReturn> tokens)
 		{
 			return new AuthInternal
 			{
@@ -32,11 +40,12 @@ namespace Backend.Mappers
 				Tokens = tokens,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
-				AvatarSrc = user.AvatarSrc
+				AvatarSrc = user.AvatarSrc,
+				Gender = user.Gender
 			};
 		}
 
-		public static AuthResponse ToAuthResponse(AuthInternal user)
+		public AuthResponse ToAuthResponse(AuthInternal user)
 		{
 			return new AuthResponse
 			{
@@ -44,7 +53,8 @@ namespace Backend.Mappers
 				Role = user.Roles,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
-				AvatarSrc = user.AvatarSrc
+				Gender = user.Gender,
+				AvatarSrc = _urlService.GetFullUrl(user.AvatarSrc, user.Gender)
 			};
 		}
 	}

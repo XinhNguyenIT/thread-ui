@@ -8,6 +8,5 @@ namespace Backend.Services.Interfaces
 	{
 		public string RevokeToken(string userId, string token);
 		public Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> role);
-
 	}
 }

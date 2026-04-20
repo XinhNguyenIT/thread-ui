@@ -16,6 +16,7 @@ public static class DependencyInjection
 		{
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 		})
 		.AddJwtBearer(options =>
 		{
@@ -35,11 +36,26 @@ public static class DependencyInjection
 			{
 				OnMessageReceived = context =>
 				{
-					var accessToken = context.Request.Cookies["accessToken"];
-					if (!string.IsNullOrEmpty(accessToken))
-					{
-						context.Token = accessToken;
-					}
+					var accessToken = context.Request.Cookies["access"];
+
+					var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerHandler>>();
+					logger.LogInformation("--- CHECKING COOKIE: {Token} ---", accessToken ?? "NULL");
+
+					Console.WriteLine("accessToken: " + accessToken);
+					context.Token = accessToken;
+
+					return Task.CompletedTask;
+				},
+				OnAuthenticationFailed = context =>
+				{
+					// 🚩 ĐẶT DEBUG TẠI ĐÂY: Nếu Token sai, hết hạn, hoặc lệch Key, nó sẽ nhảy vào đây.
+					// Phát xem biến 'context.Exception' để biết lý do chính xác (ví dụ: SecurityTokenExpiredException)
+					return Task.CompletedTask;
+				},
+				OnTokenValidated = context =>
+				{
+					// 🚩 ĐẶT DEBUG TẠI ĐÂY: Nếu nó nhảy vào đây là Token HỢP LỆ. 
+					// Bạn có thể xem 'context.Principal' để thấy các Claims.
 					return Task.CompletedTask;
 				}
 			};

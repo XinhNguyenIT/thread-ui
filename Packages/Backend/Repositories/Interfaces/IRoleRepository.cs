@@ -16,6 +16,7 @@ namespace Backend.Repositories.Interfaces
 		Task<IdentityRole?> GetByNameAsync(string roleName);
 		Task<List<RoleTypeEnum>> GetByUserAsync(User user);
 		Task<List<IdentityRole>> GetAllAsync();
+		Task AddRoleToUser(User user, List<RoleTypeEnum> roles);
 
 	}
 }

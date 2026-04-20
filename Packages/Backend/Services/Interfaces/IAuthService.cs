@@ -9,4 +9,5 @@ public interface IAuthService
 	Task<AuthInternal> Login(LoginRequest item);
 	Task Logout(int userId);
 	Task<AuthInternal> Register(RegisterRequest request);
+	Task<AuthInternal> Me();
 }

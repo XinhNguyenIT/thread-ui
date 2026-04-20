@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Backend.Enums;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
+using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Services
 {
-	public class RoleService : IRoleRepository
+	public class RoleService : IRoleService
 	{
 		private readonly IRoleRepository _roleRepository;
 

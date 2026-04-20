@@ -13,6 +13,7 @@ namespace Backend.DTOs.Internals
 		public string? LastName { get; set; }
 		public string? FirstName { get; set; }
 		public string? AvatarSrc { get; set; }
+		public GenderTypeEnum Gender { get; set; }
 		public required List<RoleTypeEnum> Roles { get; set; }
 
 		public List<TokenReturn> Tokens { get; set; } = new List<TokenReturn>();

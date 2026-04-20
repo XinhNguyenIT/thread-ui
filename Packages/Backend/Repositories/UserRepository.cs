@@ -11,44 +11,35 @@ namespace Backend.Repositories
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
 
-		private readonly IUnitOfWork _unitOfWork;
-
-		public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork)
+		public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_unitOfWork = unitOfWork;
 		}
 
-		public async Task<User> CreateUserAsync(User user, string password, List<RoleTypeEnum> roles)
+		public Task AddAsync(User entity)
 		{
-			await _unitOfWork.BeginTransactionAsync();
+			throw new NotImplementedException();
+		}
 
-			try
+		public async Task<User> CreateUserAsync(User user, string password)
+		{
+			var result = await _userManager.CreateAsync(user, password);
+
+			if (!result.Succeeded)
 			{
-				var result = await _userManager.CreateAsync(user, password);
-
-				if (!result.Succeeded)
-				{
-					throw new ValidationException(
-						"Register failed",
-						result.Errors.Select(e => e.Description).ToList()
-					);
-				}
-
-				var roleNames = roles.Select(r => r.ToString()).ToList();
-				var roleResult = await _userManager.AddToRolesAsync(user, roleNames);
-
-				if (!roleResult.Succeeded) throw new BadHttpRequestException("Failed to assign roles.");
-
-				await _unitOfWork.CommitAsync();
-				return user;
+				throw new ValidationException(
+					"Register failed",
+					result.Errors.Select(e => e.Description).ToList()
+				);
 			}
-			catch (Exception)
-			{
-				await _unitOfWork.RollbackAsync();
-				throw;
-			}
+
+			return user;
+		}
+
+		public async Task<User?> GetByIdAsync(string id)
+		{
+			return await _userManager.FindByIdAsync(id);
 		}
 
 		public async Task<User> LoginAsync(string email, string password)
