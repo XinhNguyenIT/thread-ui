@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Dataset.Interfaces;
+using Backend.Enums;
 using Backend.Models;
 
-namespace Backend.Dataset.Stag
+namespace Backend.Dataset.Datas
 {
 	public class StagSeedData : ISeedData
 	{
@@ -13,7 +14,7 @@ namespace Backend.Dataset.Stag
 
 		public List<string> Roles => new() { "ADMIN", "USER" };
 
-		public List<(User user, string password, string role)> Users => new()
+		public List<(User user, string password, List<RoleTypeEnum> roles)> Users => new()
 		{
 			(
 				new User
@@ -22,10 +23,11 @@ namespace Backend.Dataset.Stag
 					Email = "adminA@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "A",
-					LastName = "admin"
+					LastName = "admin",
+					Gender = GenderTypeEnum.OTHER,
 				},
 				"123456",
-				"ADMIN"
+				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN}
 			),
 			(
 				new User
@@ -34,10 +36,11 @@ namespace Backend.Dataset.Stag
 					Email = "a@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "1",
+					Gender = GenderTypeEnum.FEMALE,
 					LastName = "Demo"
 				},
 				"123456",
-				"USER"
+				new List<RoleTypeEnum> {RoleTypeEnum.USER}
 			)
 		};
 	}

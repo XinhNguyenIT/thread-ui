@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Enums;
+using Backend.Models;
 using Backend.Repositories.Interfaces;
+using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Services
 {
-	public class RoleService : IRoleRepository
+	public class RoleService : IRoleService
 	{
 		private readonly IRoleRepository _roleRepository;
 
@@ -40,6 +42,11 @@ namespace Backend.Services
 		public Task<IdentityRole?> GetByNameAsync(string roleName)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<List<RoleTypeEnum>> GetByUserAsync(User user)
+		{
+			return await _roleRepository.GetByUserAsync(user);
 		}
 	}
 }

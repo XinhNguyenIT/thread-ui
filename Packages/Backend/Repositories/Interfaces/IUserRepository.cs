@@ -6,6 +6,7 @@ namespace Backend.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-	Task<User> CreateUserAsync(User user, string password, RoleTypeEnum role);
-	Task LoginAsync(string email, string password);
+	Task<User> CreateUserAsync(User user, string password);
+	Task<User> LoginAsync(string email, string password);
+	Task<User?> GetByIdAsync(string id);
 }

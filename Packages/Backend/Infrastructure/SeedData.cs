@@ -48,7 +48,10 @@ public class IdentitySeeder
 
 			if (result.Succeeded)
 			{
-				await _userManager.AddToRoleAsync(item.user, item.role);
+				foreach (var role in item.roles)
+				{
+					await _userManager.AddToRoleAsync(item.user, role.ToString());
+				}
 			}
 		}
 	}

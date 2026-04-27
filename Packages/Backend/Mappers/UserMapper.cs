@@ -2,16 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 using Backend.Enums;
 using Backend.Models;
+using Backend.Services.Interfaces;
 
 namespace Backend.Mappers
 {
 	public class UserMapper
 	{
-		public static User ToModel(RegisterRequest user)
+		private readonly IUrlService _urlService;
+
+		public UserMapper(IUrlService urlService)
+		{
+			_urlService = urlService;
+		}
+
+		public User ToModel(RegisterRequest user)
 		{
 			return new User
 			{
@@ -22,12 +31,42 @@ namespace Backend.Mappers
 			};
 		}
 
-		public static RegisterResponse ToRegisterResponse(User user, RoleTypeEnum role)
+		public AuthInternal ToAuthInternal(User user, List<RoleTypeEnum> roles, List<TokenReturn> tokens, Media? avtSrc = null)
 		{
-			return new RegisterResponse
+			return new AuthInternal
 			{
 				Email = user.Email,
-				Role = role,
+				Roles = roles,
+				Tokens = tokens,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				AvatarSrc = avtSrc,
+				Gender = user.Gender
+			};
+		}
+
+		public AuthResponse ToAuthResponse(AuthInternal user)
+		{
+			return new AuthResponse
+			{
+				Email = user.Email,
+				Role = user.Roles,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Gender = user.Gender,
+				AvatarSrc = _urlService.GetFullUrl(user.AvatarSrc, user.Gender)
+			};
+		}
+
+		public UserCreatePostResponse ToUserCreatePostResponse(User user, Media? avatar)
+		{
+			return new UserCreatePostResponse
+			{
+				UserId = user.Id,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Gender = user.Gender,
+				AvatarSrc = _urlService.GetFullUrl(avatar, user.Gender)
 			};
 		}
 	}

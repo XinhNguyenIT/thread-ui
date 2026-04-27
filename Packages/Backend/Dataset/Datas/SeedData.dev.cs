@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Dataset.Interfaces;
+using Backend.Enums;
 using Backend.Models;
 
-namespace Backend.Dataset.Dev
+namespace Backend.Dataset.Datas
 {
 	public class DevSeedData : ISeedData
 	{
@@ -13,7 +14,7 @@ namespace Backend.Dataset.Dev
 
 		public List<string> Roles => new() { "ADMIN", "USER" };
 
-		public List<(User user, string password, string role)> Users => new()
+		public List<(User user, string password, List<RoleTypeEnum> roles)> Users => new()
 		{
 			(
 				new User
@@ -22,10 +23,11 @@ namespace Backend.Dataset.Dev
 					Email = "adminA@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "A",
-					LastName = "admin"
+					LastName = "admin",
+					Gender = GenderTypeEnum.MALE,
 				},
 				"Abc123456@",
-				"ADMIN"
+				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN, RoleTypeEnum.USER}
 			),
 			(
 				new User
@@ -34,10 +36,11 @@ namespace Backend.Dataset.Dev
 					Email = "adminB@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "B",
-					LastName = "admin"
+					LastName = "admin",
+					Gender = GenderTypeEnum.FEMALE,
 				},
 				"Abc123456@",
-				"ADMIN"
+				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN, RoleTypeEnum.USER}
 			),
 			(
 				new User
@@ -46,10 +49,11 @@ namespace Backend.Dataset.Dev
 					Email = "a@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "1",
-					LastName = "Demo"
+					LastName = "Demo",
+					Gender = GenderTypeEnum.MALE,
 				},
 				"Abc123456@",
-				"USER"
+				new List<RoleTypeEnum> {RoleTypeEnum.USER}
 			),
 			(
 				new User
@@ -58,10 +62,11 @@ namespace Backend.Dataset.Dev
 					Email = "b@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "2",
-					LastName = "Demo"
+					LastName = "Demo",
+					Gender = GenderTypeEnum.UNKNOWN,
 				},
 				"Abc123456@",
-				"USER"
+				new List<RoleTypeEnum> {RoleTypeEnum.USER}
 			),
 			(
 				new User
@@ -70,10 +75,11 @@ namespace Backend.Dataset.Dev
 					Email = "b@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "3",
-					LastName = "Demo"
+					LastName = "Demo",
+					Gender = GenderTypeEnum.FEMALE,
 				},
 				"Abc123456@",
-				"USER"
+				new List<RoleTypeEnum> {RoleTypeEnum.USER}
 			),
 		};
 	}

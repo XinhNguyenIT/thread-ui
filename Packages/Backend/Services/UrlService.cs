@@ -1,0 +1,52 @@
+
+using Backend.Enums;
+using Backend.Models;
+using Backend.Services.Interfaces;
+
+namespace Backend.Services;
+
+public class UrlService : IUrlService
+{
+	private readonly IHttpContextAccessor _httpContextAccessor;
+
+	public UrlService(IHttpContextAccessor httpContextAccessor)
+	{
+		_httpContextAccessor = httpContextAccessor;
+	}
+
+	public string? GetFullUrl(Media? media, GenderTypeEnum gender)
+	{
+		var request = _httpContextAccessor.HttpContext?.Request;
+		if (request == null) return media?.Src;
+
+		string fileName;
+		string folderName;
+		string subFolderName = "";
+
+		if (media == null || string.IsNullOrEmpty(media.Src))
+		{
+			folderName = "images";
+			fileName = (gender == GenderTypeEnum.FEMALE) ? "Female.jpg" : "Male.jpg";
+		}
+		else
+		{
+			folderName = "uploads";
+			fileName = media.Src;
+
+			subFolderName = (media.Status == MediaStatusEnum.DONE) ? "posts" : "temps";
+
+			if (media.Status == MediaStatusEnum.DONE && !string.IsNullOrEmpty(media.ProcessedSrc))
+			{
+				fileName = media.ProcessedSrc;
+			}
+		}
+
+		var parts = new List<string> { folderName, subFolderName, fileName }
+						.Where(s => !string.IsNullOrWhiteSpace(s));
+
+		var path = string.Join("/", parts);
+
+		var baseUrl = $"{request.Scheme}://{request.Host}";
+		return $"{baseUrl}/{path}";
+	}
+}

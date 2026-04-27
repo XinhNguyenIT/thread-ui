@@ -11,14 +11,18 @@ namespace Backend.Repositories
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
 
-
 		public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 		}
 
-		public async Task<User> CreateUserAsync(User user, string password, RoleTypeEnum role)
+		public Task AddAsync(User entity)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task<User> CreateUserAsync(User user, string password)
 		{
 			var result = await _userManager.CreateAsync(user, password);
 
@@ -30,14 +34,15 @@ namespace Backend.Repositories
 				);
 			}
 
-			var roleName = role.ToString();
-
-			await _userManager.AddToRoleAsync(user, roleName);
-
 			return user;
 		}
 
-		public async Task LoginAsync(string email, string password)
+		public async Task<User?> GetByIdAsync(string id)
+		{
+			return await _userManager.FindByIdAsync(id);
+		}
+
+		public async Task<User> LoginAsync(string email, string password)
 		{
 			var user = await _userManager.FindByEmailAsync(email) ?? throw new UnauthorizedAccessException("Invalid email");
 			var result = await _signInManager.CheckPasswordSignInAsync(
@@ -48,6 +53,8 @@ namespace Backend.Repositories
 
 			if (!result.Succeeded)
 				throw new UnauthorizedAccessException("Invalid email or password");
+
+			return user;
 		}
 	}
 }

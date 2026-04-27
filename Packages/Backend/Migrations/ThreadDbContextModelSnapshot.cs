@@ -129,6 +129,44 @@ namespace Backend.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("Backend.Models.Media", b =>
+                {
+                    b.Property<int>("MediaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MediaId"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProcessedSrc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Src")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MediaId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Medias");
+                });
+
             modelBuilder.Entity("Backend.Models.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -171,33 +209,6 @@ namespace Backend.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Backend.Models.Picture", b =>
-                {
-                    b.Property<int>("PictureId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PictureId"));
-
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Src")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PictureId");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Pictures");
-                });
-
             modelBuilder.Entity("Backend.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
@@ -208,6 +219,12 @@ namespace Backend.Migrations
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAvatar")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsReported")
                         .HasColumnType("bit");
@@ -272,6 +289,41 @@ namespace Backend.Migrations
                     b.ToTable("PostReports");
                 });
 
+            modelBuilder.Entity("Backend.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Backend.Models.Story", b =>
                 {
                     b.Property<int>("StoryId")
@@ -315,6 +367,10 @@ namespace Backend.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -552,6 +608,21 @@ namespace Backend.Migrations
                     b.Navigation("FromUser");
                 });
 
+            modelBuilder.Entity("Backend.Models.Media", b =>
+                {
+                    b.HasOne("Backend.Models.Comment", "Comment")
+                        .WithMany("Medias")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("Backend.Models.Post", "Post")
+                        .WithMany("Medias")
+                        .HasForeignKey("PostId");
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("Backend.Models.Notification", b =>
                 {
                     b.HasOne("Backend.Models.User", "FromUser")
@@ -581,21 +652,6 @@ namespace Backend.Migrations
                     b.Navigation("Story");
 
                     b.Navigation("ToUser");
-                });
-
-            modelBuilder.Entity("Backend.Models.Picture", b =>
-                {
-                    b.HasOne("Backend.Models.Comment", "Comment")
-                        .WithMany("Pictures")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("Backend.Models.Post", "Post")
-                        .WithMany("Pictures")
-                        .HasForeignKey("PostId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Backend.Models.Post", b =>
@@ -641,6 +697,17 @@ namespace Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Backend.Models.RefreshToken", b =>
+                {
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -709,7 +776,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Comment", b =>
                 {
-                    b.Navigation("Pictures");
+                    b.Navigation("Medias");
                 });
 
             modelBuilder.Entity("Backend.Models.Hashtag", b =>
@@ -721,9 +788,9 @@ namespace Backend.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Notifications");
+                    b.Navigation("Medias");
 
-                    b.Navigation("Pictures");
+                    b.Navigation("Notifications");
 
                     b.Navigation("PostHashtags");
 
@@ -750,6 +817,8 @@ namespace Backend.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("ReceiveNotifications");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("SentNotifications");
 
