@@ -13,7 +13,7 @@ namespace Backend.Models
 		public DbSet<Hashtag> Hashtags { get; set; }
 		public DbSet<Like> Likes { get; set; }
 		public DbSet<Notification> Notifications { get; set; }
-		public DbSet<Picture> Pictures { get; set; }
+		public DbSet<Media> Medias { get; set; }
 		public DbSet<PostHashtag> PostHashtags { get; set; }
 		public DbSet<PostReport> PostReports { get; set; }
 		public DbSet<Story> Stories { get; set; }
@@ -41,7 +41,7 @@ namespace Backend.Models
 						.WithOne(c => c.Post)
 						.HasForeignKey(c => c.PostId);
 
-				entity.HasMany(p => p.Pictures)
+				entity.HasMany(p => p.Medias)
 						.WithOne(pic => pic.Post)
 						.HasForeignKey(pic => pic.PostId);
 
@@ -118,14 +118,17 @@ namespace Backend.Models
 						.HasForeignKey(n => n.ToUserId);
 			});
 
-			builder.Entity<Picture>(entity =>
+			builder.Entity<Media>(entity =>
 			{
+				entity.Property(m => m.Status)
+						.HasConversion<string>();
+
 				entity.HasOne(p => p.Post)
-						.WithMany(po => po.Pictures)
+						.WithMany(po => po.Medias)
 						.HasForeignKey(p => p.PostId);
 
 				entity.HasOne(p => p.Comment)
-						.WithMany(c => c.Pictures)
+						.WithMany(c => c.Medias)
 						.HasForeignKey(p => p.CommentId);
 			});
 

@@ -11,16 +11,18 @@ namespace Backend.Models
 		public int PostId { get; set; }
 
 		public string? Content { get; set; }
+		public DateTime CreateAt { get; set; } = DateTime.UtcNow;
 
-		public PrivacySettingEnum PrivacySetting { get; set; } = PrivacySettingEnum.PUBLIC;
+		public PrivacySettingEnum PrivacySetting { get; set; }
 
-		public bool IsReported { get; set; }
+		public bool IsReported { get; set; } = false;
 
 		public required string UserId { get; set; }
+		public bool IsAvatar { get; set; } = false;
 
-		public virtual required User Author { get; set; }
+		public virtual User? Author { get; set; }
 
-		public virtual ICollection<Picture> Pictures { get; set; } = new List<Picture>();
+		public virtual ICollection<Media> Medias { get; set; } = new List<Media>();
 
 		public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 		public virtual ICollection<PostReport> Reports { get; set; } = new List<PostReport>();

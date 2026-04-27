@@ -19,6 +19,6 @@ namespace Backend.Models
 
 		public virtual User? User { get; set; }
 
-		public ICollection<Picture> Pictures { get; set; } = new List<Picture>();
+		public ICollection<Media> Medias { get; set; } = new List<Media>();
 	}
 }

@@ -24,7 +24,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "A",
 					LastName = "admin",
-					Gender = GenderTypeEnum.Male,
+					Gender = GenderTypeEnum.MALE,
 				},
 				"Abc123456@",
 				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN, RoleTypeEnum.USER}
@@ -37,7 +37,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "B",
 					LastName = "admin",
-					Gender = GenderTypeEnum.Female,
+					Gender = GenderTypeEnum.FEMALE,
 				},
 				"Abc123456@",
 				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN, RoleTypeEnum.USER}
@@ -50,7 +50,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "1",
 					LastName = "Demo",
-					Gender = GenderTypeEnum.Male,
+					Gender = GenderTypeEnum.MALE,
 				},
 				"Abc123456@",
 				new List<RoleTypeEnum> {RoleTypeEnum.USER}
@@ -63,7 +63,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "2",
 					LastName = "Demo",
-					Gender = GenderTypeEnum.Unknown,
+					Gender = GenderTypeEnum.UNKNOWN,
 				},
 				"Abc123456@",
 				new List<RoleTypeEnum> {RoleTypeEnum.USER}
@@ -76,7 +76,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "3",
 					LastName = "Demo",
-					Gender = GenderTypeEnum.Female,
+					Gender = GenderTypeEnum.FEMALE,
 				},
 				"Abc123456@",
 				new List<RoleTypeEnum> {RoleTypeEnum.USER}

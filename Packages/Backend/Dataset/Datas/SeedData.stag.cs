@@ -24,7 +24,7 @@ namespace Backend.Dataset.Datas
 					EmailConfirmed = true,
 					FirstName = "A",
 					LastName = "admin",
-					Gender = GenderTypeEnum.Other,
+					Gender = GenderTypeEnum.OTHER,
 				},
 				"123456",
 				new List<RoleTypeEnum> {RoleTypeEnum.ADMIN}
@@ -36,7 +36,7 @@ namespace Backend.Dataset.Datas
 					Email = "a@gmail.com",
 					EmailConfirmed = true,
 					FirstName = "1",
-					Gender = GenderTypeEnum.Female,
+					Gender = GenderTypeEnum.FEMALE,
 					LastName = "Demo"
 				},
 				"123456",

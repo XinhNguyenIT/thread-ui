@@ -1,0 +1,50 @@
+using Azure.Core;
+using Backend.DTOs.Internals;
+using Backend.DTOs.Requests;
+using Backend.DTOs.Responses;
+using Backend.Enums;
+using Backend.Models;
+using Backend.Services.Interfaces;
+
+namespace Backend.Mappers
+{
+	public class PostMapper
+	{
+		private readonly IUrlService _urlService;
+		private readonly UserMapper _userMapper;
+		private readonly MediaMapper _mediaMapper;
+
+		public PostMapper(IUrlService urlService, UserMapper userMapper, MediaMapper mediaMapper)
+		{
+			_urlService = urlService;
+			_userMapper = userMapper;
+			_mediaMapper = mediaMapper;
+		}
+
+		public Post ToModel(CreatePostRequest request, string userId, List<Media> mediasInput)
+		{
+			return new Post
+			{
+				UserId = userId,
+				Content = request.Caption,
+				PrivacySetting = request.PrivacySetting,
+				Medias = mediasInput,
+				IsAvatar = request.IsAvatar
+			};
+
+		}
+
+		public PostResponse ToPostResponse(Post post, User user, Media? avatar)
+		{
+			var medias = post.Medias.Select(m => _mediaMapper.ToMediaResponse(m)).ToList();
+			return new PostResponse
+			{
+				Author = _userMapper.ToUserCreatePostResponse(user, avatar),
+				Caption = post.Content,
+				CreateAt = post.CreateAt,
+				IsAvatar = post.IsAvatar,
+				Medias = medias,
+			};
+		}
+	}
+}

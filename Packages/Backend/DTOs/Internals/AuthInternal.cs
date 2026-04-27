@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.DTOs.Internals;
 using Backend.Enums;
+using Backend.Models;
 
 namespace Backend.DTOs.Internals
 {
@@ -12,7 +13,7 @@ namespace Backend.DTOs.Internals
 		public string? Email { get; set; }
 		public string? LastName { get; set; }
 		public string? FirstName { get; set; }
-		public string? AvatarSrc { get; set; }
+		public Media? AvatarSrc { get; set; }
 		public GenderTypeEnum Gender { get; set; }
 		public required List<RoleTypeEnum> Roles { get; set; }
 

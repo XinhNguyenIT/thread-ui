@@ -5,6 +5,5 @@ namespace Backend.Enums
 		PRIVATE,
 		FRIEND,
 		PUBLIC,
-		SPECIFIC_USERS
 	}
 }

@@ -6,7 +6,7 @@ using Backend.Models;
 
 namespace Backend.Repositories.Interfaces
 {
-	public interface IRefreshTokenRepository
+	public interface IRefreshTokenRepository : IGenericRepository<RefreshToken>
 	{
 		public Task RevokeToken(int token);
 		public Task<List<RefreshToken>> FindByUserId(string userId);

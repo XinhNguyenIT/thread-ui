@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-	public class RefreshTokenRepository : IGenericRepository<RefreshToken>, IRefreshTokenRepository
+	public class RefreshTokenRepository : IRefreshTokenRepository
 	{
 		private readonly ThreadDbContext _context;
 

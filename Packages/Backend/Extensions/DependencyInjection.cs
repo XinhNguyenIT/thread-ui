@@ -41,7 +41,6 @@ public static class DependencyInjection
 					var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerHandler>>();
 					logger.LogInformation("--- CHECKING COOKIE: {Token} ---", accessToken ?? "NULL");
 
-					Console.WriteLine("accessToken: " + accessToken);
 					context.Token = accessToken;
 
 					return Task.CompletedTask;

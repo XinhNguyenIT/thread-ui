@@ -1,5 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using Backend.Background.Queue;
+using Backend.Background.Workers;
 using Backend.Dataset;
 using Backend.Dataset.Datas;
 using Backend.Dataset.Interfaces;
@@ -62,19 +64,28 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //Repositories
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IMediaRepository, MediaRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-builder.Services.AddScoped<IGenericRepository<RefreshToken>, RefreshTokenRepository>();
 
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUrlService, UrlService>();
+builder.Services.AddScoped<IMediaProcessor, MediaProcessor>();
 
 //Internal DTOs
 builder.Services.AddScoped<UserContext>();
 
 //Helper
 builder.Services.AddScoped<UserMapper>();
+builder.Services.AddScoped<PostMapper>();
+builder.Services.AddScoped<MediaMapper>();
+
+builder.Services.AddSingleton<IMediaQueue, MediaQueue>();
+builder.Services.AddHostedService<MediaWorker>();
 
 var app = builder.Build();
 

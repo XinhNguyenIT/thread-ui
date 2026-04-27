@@ -13,13 +13,18 @@ public class UnitOfWork : IUnitOfWork
 	public IRefreshTokenRepository RefreshTokenRepository { get; }
 	public IRoleRepository RoleRepository { get; }
 
+	public IPostRepository PostRepository { get; }
 
-	public UnitOfWork(ThreadDbContext context, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IRoleRepository roleRepository)
+	public IMediaRepository MediaRepository { get; }
+
+	public UnitOfWork(ThreadDbContext context, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IRoleRepository roleRepository, IPostRepository postRepository, IMediaRepository mediaRepository)
 	{
 		_context = context;
 		UserRepository = userRepository;
 		RefreshTokenRepository = refreshTokenRepository;
 		RoleRepository = roleRepository;
+		PostRepository = postRepository;
+		MediaRepository = mediaRepository;
 	}
 
 	public async Task BeginTransactionAsync()

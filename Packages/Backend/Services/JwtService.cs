@@ -15,16 +15,11 @@ namespace Backend.Services;
 public class JwtService : IJwtService
 {
 	private readonly IConfiguration _config;
-
-	private readonly IGenericRepository<RefreshToken> _refreshGeneric;
-	private readonly IRefreshTokenRepository _refreshRepository;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public JwtService(IConfiguration config, IGenericRepository<RefreshToken> refreshGeneric, IRefreshTokenRepository refreshRepository, IUnitOfWork unitOfWork)
+	public JwtService(IConfiguration config, IUnitOfWork unitOfWork)
 	{
 		_config = config;
-		_refreshGeneric = refreshGeneric;
-		_refreshRepository = refreshRepository;
 		_unitOfWork = unitOfWork;
 	}
 
@@ -52,14 +47,14 @@ public class JwtService : IJwtService
 
 				try
 				{
-					var notRevokedTokens = await _refreshRepository.FindByUserId(user.Id);
+					var notRevokedTokens = await _unitOfWork.RefreshTokenRepository.FindByUserId(user.Id);
 
 					foreach (var notRevokedToken in notRevokedTokens)
 					{
-						await _refreshRepository.RevokeToken(notRevokedToken.Id);
+						await _unitOfWork.RefreshTokenRepository.RevokeToken(notRevokedToken.Id);
 					}
 
-					await _refreshGeneric.AddAsync(newRefreshToken);
+					await _unitOfWork.RefreshTokenRepository.AddAsync(newRefreshToken);
 
 					await _unitOfWork.CommitAsync();
 				}
