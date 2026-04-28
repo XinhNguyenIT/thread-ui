@@ -58,7 +58,7 @@ namespace Backend.Repositories
 			if (effectedRows <= 0) throw new BadHttpRequestException("Failed to revoke token");
 		}
 
-		public void Update(RefreshToken entity)
+		public Task Update(RefreshToken entity)
 		{
 			throw new NotImplementedException();
 		}

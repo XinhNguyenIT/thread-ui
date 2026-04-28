@@ -30,5 +30,13 @@ namespace Backend.Controllers
 
             return Ok(ApiResponse<PostResponse>.SuccessResponse(response, "Avatar updated successfully"));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
+        {
+            var response = await _userService.Update(request);
+
+            return Ok(ApiResponse<UpdateUserResponse>.SuccessResponse(response, "Profile updated successfully"));
+        }
     }
 }

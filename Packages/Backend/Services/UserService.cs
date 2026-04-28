@@ -18,15 +18,30 @@ namespace Backend.Services
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly PostMapper _postMapper;
+		private readonly UserMapper _userMapper;
 		private readonly UserContext _userContext;
 		private readonly IFileService _fileService;
 
-		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService)
+		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService, UserMapper userMapper)
 		{
 			_unitOfWork = unitOfWork;
 			_postMapper = postMapper;
 			_userContext = userContext;
 			_fileService = fileService;
+			_userMapper = userMapper;
+		}
+
+		public async Task<UpdateUserResponse> Update(UpdateUserRequest request)
+		{
+			var newUser = _userMapper.ToModel(request);
+			var userId = _userContext.UserId;
+			newUser.Id = userId;
+
+			await _unitOfWork.UserRepository.Update(newUser);
+			await _unitOfWork.SaveChangesAsync();
+
+			var response = _userMapper.ToUpdateUserResponse(newUser);
+			return response;
 		}
 
 		public async Task<PostResponse> UpdateAvatar(UpdateAvatarRequest request)
