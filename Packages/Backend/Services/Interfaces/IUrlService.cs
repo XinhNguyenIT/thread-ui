@@ -5,5 +5,5 @@ namespace Backend.Services.Interfaces;
 
 public interface IUrlService
 {
-	string? GetFullUrl(Media? media, GenderTypeEnum gender);
+	string GetFullUrl(Media media, GenderTypeEnum gender = GenderTypeEnum.UNKNOWN);
 }

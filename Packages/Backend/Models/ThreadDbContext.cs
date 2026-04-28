@@ -123,6 +123,9 @@ namespace Backend.Models
 				entity.Property(m => m.Status)
 						.HasConversion<string>();
 
+				entity.Property(m => m.Type)
+						.HasConversion<string>();
+
 				entity.HasOne(p => p.Post)
 						.WithMany(po => po.Medias)
 						.HasForeignKey(p => p.PostId);

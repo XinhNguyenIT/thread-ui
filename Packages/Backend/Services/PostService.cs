@@ -2,7 +2,7 @@ using Backend.Background.Queue;
 using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
-using Backend.Enums;
+using Backend.Helpers;
 using Backend.Mappers;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
@@ -31,23 +31,37 @@ namespace Backend.Services
 		{
 			var userId = _userContext.UserId;
 			var medias = new List<Media>();
+			var movedFiles = new List<string>();
 
 			foreach (var temp in request.Files)
 			{
 				var finalName = await _fileService.MoveToPermanentAsync(temp);
+				movedFiles.Add(finalName);
 
 				medias.Add(new Media
 				{
 					Src = finalName,
-					Type = GetTypeFromExtension(finalName),
-					Status = MediaStatusEnum.PROCESSING
+					Type = TypeMediaHelper.Get(finalName),
 				});
 			}
 
 			var post = _postMapper.ToModel(request, userId, medias);
 
-			await _unitOfWork.PostRepository.AddAsync(post);
-			await _unitOfWork.CommitAsync();
+			try
+			{
+				await _unitOfWork.PostRepository.AddAsync(post);
+				await _unitOfWork.CommitAsync();
+
+			}
+			catch (System.Exception ex)
+			{
+				foreach (var file in movedFiles)
+				{
+					await _fileService.DeleteAsync(file);
+				}
+				throw;
+			}
+
 
 			foreach (var m in medias)
 			{
@@ -60,24 +74,6 @@ namespace Backend.Services
 			var response = _postMapper.ToPostResponse(post, user, avt);
 
 			return response;
-		}
-
-		private string GetTypeFromExtension(string finalName)
-		{
-			var extension = Path.GetExtension(finalName).ToLowerInvariant();
-
-			return extension switch
-			{
-				// Nhóm Image
-				".jpg" or ".jpeg" or ".png" or ".gif" or ".bmp" or ".webp" => "image",
-
-				// Nhóm Video
-				".mp4" or ".mov" or ".avi" or ".wmv" or ".flv" or ".mkv" => "video",
-
-				// Các loại khác hoặc mặc định
-				".pdf" => "pdf",
-				_ => "other"
-			};
 		}
 	}
 }

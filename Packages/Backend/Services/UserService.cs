@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Backend.DTOs.Internals;
+using Backend.DTOs.Requests;
+using Backend.DTOs.Responses;
+using Backend.Enums;
+using Backend.Helpers;
+using Backend.Mappers;
+using Backend.Models;
+using Backend.Repositories.Interfaces;
+using Backend.Services.Interfaces;
+
+namespace Backend.Services
+{
+	public class UserService : IUserService
+	{
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly PostMapper _postMapper;
+		private readonly UserContext _userContext;
+		private readonly IFileService _fileService;
+
+		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService)
+		{
+			_unitOfWork = unitOfWork;
+			_postMapper = postMapper;
+			_userContext = userContext;
+			_fileService = fileService;
+		}
+
+		public async Task<PostResponse> UpdateAvatar(UpdateAvatarRequest request)
+		{
+			var typeMedia = TypeMediaHelper.Get(request.File);
+			if (typeMedia != MediaTypeEnum.IMAGE)
+				throw new BadHttpRequestException("Avatar must be image!");
+
+			var userId = _userContext.UserId;
+
+			var media = new Media
+			{
+				Src = request.File,
+				Type = TypeMediaHelper.Get(request.File)
+			};
+
+			await _unitOfWork.BeginTransactionAsync();
+
+			var finalName = "";
+
+			try
+			{
+				finalName = await _fileService.MoveToPermanentAsync(request.File);
+
+				var newPost = _postMapper.ToModel(request, userId, media);
+				await _unitOfWork.PostRepository.DisableAllAvatarsAsync(userId);
+
+				await _unitOfWork.PostRepository.AddAsync(newPost);
+				await _unitOfWork.CommitAsync();
+
+				var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+				var avatar = await _unitOfWork.MediaRepository.GetAvtSrcByUserId(userId);
+				var response = _postMapper.ToPostResponse(newPost, user, avatar);
+
+				return response;
+			}
+			catch (Exception ex)
+			{
+				await _unitOfWork.RollbackAsync();
+				await _fileService.DeleteAsync(finalName);
+				throw;
+			}
+		}
+	}
+}

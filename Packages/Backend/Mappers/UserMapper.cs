@@ -45,9 +45,9 @@ namespace Backend.Mappers
 			};
 		}
 
-		public AuthResponse ToAuthResponse(AuthInternal user)
+		public UserResponse ToAuthResponse(AuthInternal user)
 		{
-			return new AuthResponse
+			return new UserResponse
 			{
 				Email = user.Email,
 				Role = user.Roles,

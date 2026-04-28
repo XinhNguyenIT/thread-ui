@@ -8,6 +8,7 @@ namespace Backend.Repositories.Interfaces
 {
 	public interface IPostRepository : IGenericRepository<Post>
 	{
-		public List<Post> GetPagedPost(int page = 1, int pageSize = 10);
+		List<Post> GetPagedPost(int page = 1, int pageSize = 10);
+		Task DisableAllAvatarsAsync(string userId);
 	}
 }

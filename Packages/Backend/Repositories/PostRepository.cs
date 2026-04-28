@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
@@ -24,6 +25,14 @@ namespace Backend.Repositories
 		public void Delete(Post entity)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task DisableAllAvatarsAsync(string userId)
+		{
+			await _context.Posts
+					.Where(p => p.UserId == userId && p.IsAvatar == true)
+					.ExecuteUpdateAsync(setters => setters
+						.SetProperty(p => p.IsAvatar, false));
 		}
 
 		public Task<IEnumerable<Post>> GetAllAsync()

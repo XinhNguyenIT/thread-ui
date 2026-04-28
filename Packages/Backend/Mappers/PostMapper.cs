@@ -31,7 +31,17 @@ namespace Backend.Mappers
 				Medias = mediasInput,
 				IsAvatar = request.IsAvatar
 			};
+		}
 
+		public Post ToModel(UpdateAvatarRequest request, string userId, Media media)
+		{
+			return new Post
+			{
+				UserId = userId,
+				PrivacySetting = request.Privacy,
+				Medias = new List<Media> { media },
+				IsAvatar = true
+			};
 		}
 
 		public PostResponse ToPostResponse(Post post, User user, Media? avatar)
@@ -44,6 +54,8 @@ namespace Backend.Mappers
 				CreateAt = post.CreateAt,
 				IsAvatar = post.IsAvatar,
 				Medias = medias,
+				PostId = post.PostId,
+				PrivacySetting = post.PrivacySetting
 			};
 		}
 	}

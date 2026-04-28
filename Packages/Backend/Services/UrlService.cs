@@ -14,10 +14,10 @@ public class UrlService : IUrlService
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public string? GetFullUrl(Media? media, GenderTypeEnum gender)
+	public string GetFullUrl(Media media, GenderTypeEnum gender = GenderTypeEnum.UNKNOWN)
 	{
 		var request = _httpContextAccessor.HttpContext?.Request;
-		if (request == null) return media?.Src;
+		if (request == null) return media.Src;
 
 		string fileName;
 		string folderName;
@@ -31,11 +31,12 @@ public class UrlService : IUrlService
 		else
 		{
 			folderName = "uploads";
+			var mediaIsDone = media.Status == MediaStatusEnum.DONE;
 			fileName = media.Src;
 
-			subFolderName = (media.Status == MediaStatusEnum.DONE) ? "posts" : "temps";
+			subFolderName = mediaIsDone ? "posts" : "temps";
 
-			if (media.Status == MediaStatusEnum.DONE && !string.IsNullOrEmpty(media.ProcessedSrc))
+			if (mediaIsDone && !string.IsNullOrEmpty(media.ProcessedSrc))
 			{
 				fileName = media.ProcessedSrc;
 			}

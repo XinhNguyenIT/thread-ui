@@ -19,12 +19,14 @@ namespace Backend.Services
 		private readonly IUrlService _urlMapper;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserContext _userContext;
+		private readonly ILogger<FileService> _logger;
 
-		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext)
+		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext, ILogger<FileService> logger)
 		{
 			_urlMapper = urlMapper;
 			_unitOfWork = unitOfWork;
 			_userContext = userContext;
+			_logger = logger;
 		}
 
 		public async Task<string> SaveTempAsync(IFormFile file)
@@ -65,10 +67,22 @@ namespace Backend.Services
 			return Task.FromResult(newFileName);
 		}
 
-		public Task DeleteAsync(string path)
+		public Task DeleteAsync(string fileName)
 		{
-			if (File.Exists(path))
-				File.Delete(path);
+			if (string.IsNullOrEmpty(fileName)) return Task.CompletedTask;
+			var fullPath = Path.Combine(_postPath, fileName);
+
+			try
+			{
+				if (File.Exists(fullPath))
+				{
+					File.Delete(fullPath);
+				}
+			}
+			catch (IOException ex)
+			{
+				_logger.LogError(ex, "Cannot delete file: {FileName}", fileName);
+			}
 
 			return Task.CompletedTask;
 		}
