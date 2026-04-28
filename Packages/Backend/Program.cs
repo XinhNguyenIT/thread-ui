@@ -74,6 +74,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUrlService, UrlService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMediaProcessor, MediaProcessor>();
 
 //Internal DTOs
