@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Repositories.Interfaces;
 
-public interface IUserRepository
+public interface IUserRepository : IGenericRepository<User>
 {
 	Task<User> CreateUserAsync(User user, string password);
 	Task<User> LoginAsync(string email, string password);

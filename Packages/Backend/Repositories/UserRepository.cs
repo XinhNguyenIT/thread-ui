@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Backend.Enums;
 using Backend.Exceptions;
 using Backend.Models;
@@ -17,11 +18,6 @@ namespace Backend.Repositories
 			_signInManager = signInManager;
 		}
 
-		public Task AddAsync(User entity)
-		{
-			throw new NotImplementedException();
-		}
-
 		public async Task<User> CreateUserAsync(User user, string password)
 		{
 			var result = await _userManager.CreateAsync(user, password);
@@ -37,9 +33,9 @@ namespace Backend.Repositories
 			return user;
 		}
 
-		public async Task<User?> GetByIdAsync(string id)
+		public Task<IEnumerable<User>> GetAllAsync()
 		{
-			return await _userManager.FindByIdAsync(id);
+			throw new NotImplementedException();
 		}
 
 		public async Task<User> LoginAsync(string email, string password)
@@ -55,6 +51,48 @@ namespace Backend.Repositories
 				throw new UnauthorizedAccessException("Invalid email or password");
 
 			return user;
+		}
+
+		public Task<User?> GetByIdAsync(string id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<User?> GetByIdAsync(int id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task AddAsync(User entity)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task Update(User entity)
+		{
+			var currentUser = await _userManager.FindByIdAsync(entity.Id.ToString());
+
+			if (currentUser == null)
+			{
+				throw new KeyNotFoundException("User not found");
+			}
+
+			currentUser.FirstName = entity.FirstName;
+			currentUser.Gender = entity.Gender;
+			currentUser.LastName = entity.LastName;
+
+			var result = await _userManager.UpdateAsync(currentUser);
+
+			if (!result.Succeeded)
+			{
+				var errors = result.Errors.Select(e => e.Description).ToList();
+				throw new ValidationException("Update user failed", errors);
+			}
+		}
+
+		public void Delete(User entity)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

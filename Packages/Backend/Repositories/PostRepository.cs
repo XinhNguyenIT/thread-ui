@@ -50,7 +50,7 @@ namespace Backend.Repositories
 			throw new NotImplementedException();
 		}
 
-		public void Update(Post entity)
+		public Task Update(Post entity)
 		{
 			throw new NotImplementedException();
 		}
