@@ -1,30 +1,34 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: tiktok_mysql
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: sql_threads
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: tiktok_db
-      MYSQL_USER: tiktok_user
-      MYSQL_PASSWORD: 123456
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=XinhIT@30052003
     ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    command: --default-authentication-plugin=mysql_native_password
+      - '1433:1433'
+    mem_limit: 2g # Giúp container chạy ổn định hơn trên Mac Air
 
-  adminer:
-    image: adminer
-    container_name: tiktok_adminer
-    restart: always
+  api:
+    build:
+      context: ./Packages/Backend
+      dockerfile: Dockerfile
     ports:
-      - "8082:8080"
+      - '5000:8080'
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=InteractHubDB;User Id=sa;Password=XinhIT@30052003;TrustServerCertificate=True;Encrypt=False;
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
-      - mysql
+      - db
 
-volumes:
-  mysql_data:
+  frontend:
+    build:
+      context: ./Packages/Frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:5173' # Sửa thành 3000:5173 nếu dùng Vite
+    depends_on:
+      - api
