@@ -1,42 +1,52 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 // Sửa lại import cho đúng với file authService.ts bạn đã tạo
-import { login } from '@/services/authService';
+
 import Input from '@/components/Input';
 import Button from '@/components/Button/BaseButton';
 import Spinner from '@/components/Spinner';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { authActions } from '@/redux/actions/authActions';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 function Login() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
+    const user = useAppSelector((state) => state.auth.information);
+
+    useEffect(() => {
+        if (user == null) {
+            const fetchUser = async () => {
+                try {
+                    await dispatch(authActions.getCurrentUser()).unwrap();
+                } catch (err) {
+                    console.error('Phiên đăng nhập hết hạn');
+                }
+            };
+            fetchUser();
+        }
+    }, []);
 
     // 1. Khai báo State
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const canSubmit = username.trim() && password.trim();
+    const canSubmit = email.trim() && password.trim();
 
     // 2. Logic xử lý khi nhấn nút Log in
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            // Gọi đúng hàm login và truyền đúng cấu trúc Object mà Backend chờ đợi
-            const response = await login({ email: username, password: password });
-
-            // Kiểm tra kết quả trả về từ Backend (Thường là response.data)
-            if (response.data && response.data.token) {
-                // Requirement F2: Lưu token vào localStorage để duy trì phiên đăng nhập
-                localStorage.setItem('token', response.data.token);
-
-                // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-                navigate('/');
-            } else {
-                alert('Login failed: Invalid response from server');
-            }
+            const payload = {
+                email,
+                password,
+            };
+            await dispatch(authActions.login(payload)).unwrap();
+            navigate('/');
         } catch (error: any) {
-            console.error('Lỗi đăng nhập:', error.response?.data);
-            // Hiển thị lỗi cụ thể từ Backend trả về (ví dụ: Sai mật khẩu)
             alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
         } finally {
             setIsLoading(false);
@@ -53,8 +63,8 @@ function Login() {
                     <Input
                         type="text"
                         placeholder="Mobile number, username or email"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="h-[50px]"
                         wrapperClassName="rounded-[12px]"
                     />

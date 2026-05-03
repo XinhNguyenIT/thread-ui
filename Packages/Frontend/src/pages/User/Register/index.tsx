@@ -1,18 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom'; // Thêm useNavigate vào đây
 import { useForm } from 'react-hook-form';
 import { ChevronDown, CircleHelp } from 'lucide-react';
-import { register as registerUser } from '@/services/authService';
 import Input from '@/components/Input';
+import { RoleTypeEnum } from '@/common/roleTypeEnum';
+import { GenderTypeEnum } from '@/common/genderTypeEnum';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { authActions } from '@/redux/actions/authActions';
 
 // Định nghĩa kiểu dữ liệu (Để ở ngoài là đúng)
 type RegisterFormValues = {
-    contact: string;
+    email: string;
     password: string;
     month: string;
     day: string;
     year: string;
-    fullName: string;
-    username: string;
+    firstName: string;
+    lastName: string;
 };
 
 const months = [
@@ -35,36 +38,66 @@ const years = Array.from({ length: 100 }, (_, i) => String(new Date().getFullYea
 export default function RegisterPage() {
     // ĐÚNG: Khai báo navigate bên trong hàm Component
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const {
         register,
         handleSubmit,
+        getValues,
+        trigger,
         formState: { errors, isSubmitting },
-    } = useForm<RegisterFormValues>();
+    } = useForm<RegisterFormValues>({
+        mode: 'onTouched',
+    });
+
+    const nameValidationRule = {
+        validate: (value: string) => {
+            const { firstName, lastName } = getValues();
+            if (!firstName && !lastName) {
+                return 'At least one name (First or Last) is required';
+            }
+            return true;
+        },
+    };
+
+    const emailValidation = {
+        required: 'Email is required', // Không được để trống
+        pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, // Biểu thức chính quy (Regex)
+            message: 'Invalid email address', // Nếu không đúng định dạng thì báo lỗi này
+        },
+    };
+
+    const passwordValidation = {
+        required: 'Password is required',
+        minLength: {
+            value: 6,
+            message: 'Password must be at least 6 characters',
+        },
+        validate: {
+            hasUpperCase: (value: string) =>
+                /[A-Z]/.test(value) || 'Password must contain at least one uppercase letter',
+            hasSpecialChar: (value: string) =>
+                /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain at least one special character',
+        },
+    };
 
     // ĐÚNG: Đưa hàm onSubmit vào bên trong để sử dụng được navigate và registerUser
     const onSubmit = async (data: RegisterFormValues) => {
         try {
-            const nameParts = data.fullName.split(' ');
-            const firstName = nameParts[0];
-            const lastName = nameParts.slice(1).join(' ') || ' ';
-
             const payload = {
-                firstName: firstName,
-                lastName: lastName,
-                email: data.contact,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
                 password: data.password,
-                role: 'USER',
+                gender: GenderTypeEnum.UNKNOWN,
+                roles: [RoleTypeEnum.USER],
+                birthday: `${data.year}/${months.indexOf(data.month) + 1}/${data.day}`,
             };
 
-            const response = await registerUser(payload);
-            console.log('Đăng ký thành công:', response);
-            alert('Đăng ký thành công!');
+            await dispatch(authActions.register(payload)).unwrap();
             navigate('/login');
-        } catch (error: any) {
-            console.error('Lỗi đăng ký:', error.response?.data);
-            alert('Lỗi: ' + (error.response?.data?.message || 'Không thể đăng ký'));
-        }
+        } catch (error: any) {}
     };
 
     return (
@@ -81,12 +114,12 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-6">
                     {/* Sử dụng Component Input mới của bạn */}
                     <Input
-                        label="Mobile number or email"
-                        placeholder="Mobile number or email"
-                        id="contact"
-                        inputClassName="h-[50px]"
-                        error={errors.contact ? 'Mobile number or email is required' : ''}
-                        {...register('contact', { required: true })}
+                        label="Email"
+                        placeholder="Email, ex: user@example.com"
+                        id="email"
+                        inputClassName="border-red"
+                        error={errors.email?.message}
+                        {...register('email', emailValidation)}
                     />
 
                     <Input
@@ -94,9 +127,9 @@ export default function RegisterPage() {
                         type="password"
                         placeholder="Password"
                         id="password"
-                        inputClassName="h-[50px]"
-                        error={errors.password ? 'Password is required' : ''}
-                        {...register('password', { required: true })}
+                        inputClassName={errors.firstName || errors.lastName ? 'border-red-500' : ''}
+                        error={errors.password?.message}
+                        {...register('password', passwordValidation)}
                     />
 
                     {/* Birthday Section - Giữ nguyên logic cũ vì nó dùng Select */}
@@ -128,24 +161,28 @@ export default function RegisterPage() {
                             ))}
                         </div>
                     </div>
-
-                    <Input
-                        label="Name"
-                        placeholder="Full name"
-                        id="fullName"
-                        inputClassName="h-[50px]"
-                        error={errors.fullName ? 'Full name is required' : ''}
-                        {...register('fullName', { required: true })}
-                    />
-
-                    <Input
-                        label="Username"
-                        placeholder="Username"
-                        id="username"
-                        inputClassName="h-[50px]"
-                        error={errors.username ? 'Username is required' : ''}
-                        {...register('username', { required: true })}
-                    />
+                    <div className="flex gap-5">
+                        <Input
+                            label="First Name"
+                            placeholder="First name"
+                            id="firstName"
+                            error={errors.firstName?.message || errors.lastName?.message}
+                            {...register('firstName', {
+                                ...nameValidationRule,
+                                onChange: () => trigger('lastName'),
+                            })}
+                        />
+                        <Input
+                            label="Last Name"
+                            placeholder="Last name"
+                            id="lastName"
+                            inputClassName={errors.firstName || errors.lastName ? 'border-red-500' : ''}
+                            {...register('lastName', {
+                                ...nameValidationRule,
+                                onChange: () => trigger('firstName'),
+                            })}
+                        />
+                    </div>
 
                     {/* Submit Button */}
                     <div className="pt-2">

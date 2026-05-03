@@ -40,7 +40,7 @@ namespace Backend.Repositories
 
 		public async Task<User> LoginAsync(string email, string password)
 		{
-			var user = await _userManager.FindByEmailAsync(email) ?? throw new UnauthorizedAccessException("Invalid email");
+			var user = await _userManager.FindByEmailAsync(email) ?? throw new BadHttpRequestException("Invalid email");
 			var result = await _signInManager.CheckPasswordSignInAsync(
 				user,
 				password,
@@ -48,7 +48,7 @@ namespace Backend.Repositories
 			);
 
 			if (!result.Succeeded)
-				throw new UnauthorizedAccessException("Invalid email or password");
+				throw new BadHttpRequestException("Invalid email or password");
 
 			return user;
 		}

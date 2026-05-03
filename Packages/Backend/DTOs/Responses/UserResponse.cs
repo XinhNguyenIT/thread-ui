@@ -13,6 +13,8 @@ namespace Backend.DTOs.Responses
 		public string? LastName { get; set; }
 		public string? FirstName { get; set; }
 		public string? AvatarSrc { get; set; }
+		public DateTime Birthday { get; set; }
+
 		public GenderTypeEnum Gender { get; set; }
 
 		public required List<RoleTypeEnum> Role { get; set; }

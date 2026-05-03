@@ -15,18 +15,17 @@ namespace Backend.Services
 	{
 		private readonly string _tempPath = Path.Combine("wwwroot/uploads/temps");
 		private readonly string _postPath = Path.Combine("wwwroot/uploads/posts");
-
 		private readonly IUrlService _urlMapper;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserContext _userContext;
-		private readonly ILogger<FileService> _logger;
 
-		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext, ILogger<FileService> logger)
+		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext, IWebHostEnvironment webHostEnvironment)
 		{
 			_urlMapper = urlMapper;
 			_unitOfWork = unitOfWork;
 			_userContext = userContext;
-			_logger = logger;
+			_webHostEnvironment = webHostEnvironment;
 		}
 
 		public async Task<string> SaveTempAsync(IFormFile file)
@@ -67,21 +66,24 @@ namespace Backend.Services
 			return Task.FromResult(newFileName);
 		}
 
-		public Task DeleteAsync(string fileName)
+		public Task DeleteAsync(string fullPath)
 		{
-			if (string.IsNullOrEmpty(fileName)) return Task.CompletedTask;
-			var fullPath = Path.Combine(_postPath, fileName);
-
 			try
 			{
-				if (File.Exists(fullPath))
+				var uri = new Uri(fullPath);
+				var path = uri.AbsolutePath;
+
+				var trimmedPath = path.TrimStart('/');
+				var physicalPath = Path.Combine(_webHostEnvironment.WebRootPath, trimmedPath);
+
+				if (File.Exists(physicalPath))
 				{
-					File.Delete(fullPath);
+					File.Delete(physicalPath);
 				}
 			}
-			catch (IOException ex)
+			catch (Exception)
 			{
-				_logger.LogError(ex, "Cannot delete file: {FileName}", fileName);
+
 			}
 
 			return Task.CompletedTask;

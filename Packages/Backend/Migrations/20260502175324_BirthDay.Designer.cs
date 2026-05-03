@@ -4,6 +4,7 @@ using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ThreadDbContext))]
-    partial class ThreadDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260502175324_BirthDay")]
+    partial class BirthDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Backend.Models.Friendship", b =>
@@ -78,7 +81,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Friendships", (string)null);
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("Backend.Models.Hashtag", b =>
@@ -95,7 +98,7 @@ namespace Backend.Migrations
 
                     b.HasKey("HashtagId");
 
-                    b.ToTable("Hashtags", (string)null);
+                    b.ToTable("Hashtags");
                 });
 
             modelBuilder.Entity("Backend.Models.Like", b =>
@@ -126,7 +129,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes", (string)null);
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("Backend.Models.Media", b =>
@@ -164,7 +167,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Medias", (string)null);
+                    b.ToTable("Medias");
                 });
 
             modelBuilder.Entity("Backend.Models.Notification", b =>
@@ -206,7 +209,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Backend.Models.Post", b =>
@@ -241,7 +244,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Backend.Models.PostHashtag", b =>
@@ -256,7 +259,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("HashtagId");
 
-                    b.ToTable("PostHashtags", (string)null);
+                    b.ToTable("PostHashtags");
                 });
 
             modelBuilder.Entity("Backend.Models.PostReport", b =>
@@ -286,7 +289,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostReports", (string)null);
+                    b.ToTable("PostReports");
                 });
 
             modelBuilder.Entity("Backend.Models.RefreshToken", b =>
@@ -321,7 +324,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Backend.Models.Story", b =>
@@ -344,7 +347,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Stories", (string)null);
+                    b.ToTable("Stories");
                 });
 
             modelBuilder.Entity("Backend.Models.User", b =>
