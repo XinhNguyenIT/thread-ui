@@ -15,16 +15,17 @@ namespace Backend.Services
 	{
 		private readonly string _tempPath = Path.Combine("wwwroot/uploads/temps");
 		private readonly string _postPath = Path.Combine("wwwroot/uploads/posts");
-
 		private readonly IUrlService _urlMapper;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserContext _userContext;
 
-		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext)
+		public FileService(IUrlService urlMapper, IUnitOfWork unitOfWork, UserContext userContext, IWebHostEnvironment webHostEnvironment)
 		{
 			_urlMapper = urlMapper;
 			_unitOfWork = unitOfWork;
 			_userContext = userContext;
+			_webHostEnvironment = webHostEnvironment;
 		}
 
 		public async Task<string> SaveTempAsync(IFormFile file)
@@ -65,10 +66,27 @@ namespace Backend.Services
 			return Task.FromResult(newFileName);
 		}
 
-		public Task DeleteAsync(string path)
+		public Task DeleteAsync(string fullPath)
 		{
-			if (File.Exists(path))
-				File.Delete(path);
+			try
+			{
+				var uri = new Uri(fullPath);
+				var path = uri.AbsolutePath;
+
+				var trimmedPath = path.TrimStart('/');
+				var physicalPath = Path.Combine(_webHostEnvironment.WebRootPath, trimmedPath);
+
+				if (File.Exists(physicalPath))
+				{
+					File.Delete(physicalPath);
+				}
+			}
+			catch (Exception)
+			{
+
+			}
+
+
 
 			return Task.CompletedTask;
 		}

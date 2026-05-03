@@ -1,27 +1,69 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import DefaultLayout from '@/layouts/DefaultLayout'; // Trỏ vào index.tsx của layouts
 import { publicRoutes, privateRoutes } from './routes';
+import PublicRoute from './components/Routes/PublicRoute';
+import PrivateRoute from './components/Routes/PrivateRoute';
+import { authActions } from './redux/actions/authActions';
+import { useAppDispatch } from './hooks/useAppDispatch';
+import { useAppSelector } from './hooks/useAppSelector';
+import { useEffect, useState } from 'react';
+import Spinner from './components/Spinner';
+import DefaultLayout from './layouts/DefaultLayout';
+import ErrorDialog from './components/Dialog/ErrorDialog';
+import { handleResetStatus } from './redux/slices/statusSlice';
 
 export default function App() {
+    const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(true);
+
+    const status = useAppSelector((state) => state.status);
+    const { isError, isLoading, ...statusToShow } = status;
+
+    const { information } = useAppSelector((state) => state.auth);
+
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                await dispatch(authActions.getCurrentUser());
+            } catch (error) {
+                console.log('Lỗi', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        !information && getUser();
+    }, []);
+
+    if (loading) return <Spinner />;
     return (
-        <BrowserRouter>
-            <Routes>
-                {/* Render public routes (Login, Register) */}
-                {publicRoutes.map((route, index) => {
-                    const Page = route.component;
-                    return <Route key={index} path={route.path} element={<Page />} />;
-                })}
+        <>
+            <ErrorDialog
+                isOpen={status.isError}
+                errorData={statusToShow}
+                onClose={() => dispatch(handleResetStatus())}
+            />
+            <BrowserRouter
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}
+            >
+                <Routes>
+                    {publicRoutes.map((route, index) => (
+                        <Route key={index} path={route.path} element={<PublicRoute>{route.component}</PublicRoute>} />
+                    ))}
 
-                {/* Render private routes bọc trong DefaultLayout */}
-                <Route element={<DefaultLayout />}>
-                    {privateRoutes.map((route, index) => {
-                        const Page = route.component;
-                        return <Route key={index} path={route.path} element={<Page />} />;
-                    })}
-                </Route>
-
-                <Route path="/" element={<Navigate to="/home" replace />} />
-            </Routes>
-        </BrowserRouter>
+                    {privateRoutes.map((route, index) => (
+                        <Route element={<DefaultLayout />}>
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={<PrivateRoute>{route.component}</PrivateRoute>}
+                            />
+                        </Route>
+                    ))}
+                </Routes>
+            </BrowserRouter>
+        </>
     );
 }

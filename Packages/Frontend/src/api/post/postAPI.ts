@@ -1,0 +1,3 @@
+export const POST_API = {
+    CREATE_POST: '/api/Post',
+};

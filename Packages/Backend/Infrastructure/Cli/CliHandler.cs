@@ -10,14 +10,14 @@ public static class CliHandler
 		if (command != "seed") return false;
 
 		var start = DateTime.Now;
-		var validEnvs = new[] { "dev", "stag" };
+		var validEnvs = new[] { "default", "test" };
 
 		Console.WriteLine("🚀 Starting seeding process...");
 		Console.WriteLine($"📦 Environment: {env}");
 
 		if (string.IsNullOrEmpty(env) || !validEnvs.Contains(env))
 		{
-			Console.WriteLine("❌ Invalid environment (dev/stag)");
+			Console.WriteLine("❌ Invalid environment (default/test)");
 			return true;
 		}
 

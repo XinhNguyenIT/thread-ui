@@ -29,6 +29,8 @@ public class UnitOfWork : IUnitOfWork
 
 	public async Task BeginTransactionAsync()
 	{
+		if (_context.Database.CurrentTransaction != null) return;
+
 		_transaction = await _context.Database.BeginTransactionAsync();
 	}
 

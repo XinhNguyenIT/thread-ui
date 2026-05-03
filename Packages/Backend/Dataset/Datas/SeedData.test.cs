@@ -8,9 +8,9 @@ using Backend.Models;
 
 namespace Backend.Dataset.Datas
 {
-	public class StagSeedData : ISeedData
+	public class TestSeedData : ISeedData
 	{
-		public string Type => "stag";
+		public string Type => "test";
 
 		public List<string> Roles => new() { "ADMIN", "USER" };
 

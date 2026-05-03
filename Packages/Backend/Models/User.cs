@@ -7,6 +7,7 @@ namespace Backend.Models
 	{
 		public string? FirstName { get; set; }
 		public string? LastName { get; set; }
+		public DateTime Birthday { get; set; }
 		public GenderTypeEnum Gender { get; set; } = GenderTypeEnum.UNKNOWN;
 
 		public virtual ICollection<Post> Posts { get; set; } = new List<Post>();

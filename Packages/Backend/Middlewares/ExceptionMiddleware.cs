@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using Backend.Exceptions;
 
 namespace Backend.Middlewares
@@ -88,8 +90,14 @@ namespace Backend.Middlewares
 				response["errors"] = errors;
 			}
 
+			var options = new JsonSerializerOptions
+			{
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				WriteIndented = true
+			};
 
-			await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+			await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
 		}
 	}
 }

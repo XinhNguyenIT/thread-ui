@@ -16,9 +16,45 @@ using Backend.Repositories.Interfaces;
 using Backend.Services;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        // Phẳng hóa các lỗi từ ModelState thành List<string>
+        var errorList = actionContext.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .SelectMany(x => x.Value.Errors)
+            .Select(x => x.ErrorMessage)
+            .ToList();
+
+        var response = new Dictionary<string, object?>
+        {
+            ["success"] = false,
+            ["statusCode"] = StatusCodes.Status400BadRequest,
+            ["message"] = "Dữ liệu không hợp lệ",
+            ["traceId"] = actionContext.HttpContext.TraceIdentifier,
+            ["errors"] = errorList
+        };
+
+        return new BadRequestObjectResult(response);
+    };
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -51,8 +87,8 @@ builder.Services.AddControllers()
     });
 
 //Data seed
-builder.Services.AddScoped<ISeedData, DevSeedData>();
-builder.Services.AddScoped<ISeedData, StagSeedData>();
+builder.Services.AddScoped<ISeedData, DefaultSeedData>();
+builder.Services.AddScoped<ISeedData, TestSeedData>();
 
 builder.Services.AddScoped<SeedDataFactory>();
 builder.Services.AddScoped<IdentitySeeder>();
@@ -100,6 +136,7 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

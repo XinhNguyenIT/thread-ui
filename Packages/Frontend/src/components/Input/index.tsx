@@ -29,28 +29,46 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         },
         ref,
     ) => {
-        const wrapperBase = 'flex w-full items-center gap-3 border bg-white transition-colors';
+        // Base classes cho wrapper
+        const wrapperBase = 'flex w-full items-center gap-3 border bg-white transition-all duration-200';
 
-        const wrapperVariant = {
-            default: 'rounded-2xl border-zinc-300 px-4 py-3 focus-within:border-zinc-500',
-            search: 'rounded-full border-zinc-200 px-5 py-4 focus-within:border-zinc-400',
+        // Định dạng bo góc và padding theo variant
+        const variantStyles = {
+            default: 'rounded-2xl px-4 py-3',
+            search: 'rounded-full px-5 py-4',
+        };
+
+        // Logic xử lý màu sắc Border để không bị ghi đè (Quan trọng)
+        const getBorderClass = () => {
+            if (error) {
+                return 'border-red-500 focus-within:border-red-500 ring-1 ring-red-500/20';
+            }
+            if (variant === 'search') {
+                return 'border-zinc-200 focus-within:border-zinc-400';
+            }
+            return 'border-zinc-300 focus-within:border-zinc-500';
         };
 
         const inputBase = 'w-full bg-transparent text-[16px] text-zinc-900 outline-none placeholder:text-zinc-400';
 
         return (
-            <div className={`flex w-full flex-col gap-2 ${wrapperClassName}`}>
+            <div className={`flex w-full flex-col gap-1.5 ${wrapperClassName}`}>
+                {/* Label Section */}
                 {label && (
-                    <label htmlFor={id} className="text-sm font-medium text-zinc-700">
+                    <label htmlFor={id} className="ml-1 text-sm font-semibold text-zinc-700">
                         {label}
                         {required && <span className="text-red-500"> *</span>}
                     </label>
                 )}
 
+                {/* Input Wrapper */}
                 <div
-                    className={`${wrapperBase} ${wrapperVariant[variant]} ${
-                        error ? 'border-red-500' : ''
-                    } ${className}`}
+                    className={`
+                        ${wrapperBase} 
+                        ${variantStyles[variant]} 
+                        ${getBorderClass()} 
+                        ${className}
+                    `}
                 >
                     {leftIcon && (
                         <span className="flex items-center justify-center text-zinc-400 [&>svg]:h-5 [&>svg]:w-5">
@@ -73,7 +91,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                     )}
                 </div>
 
-                {error && <span className="text-sm text-red-500">{error}</span>}
+                {/* Error Message */}
+                {error && (
+                    <span className="ml-1 text-[13px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1 duration-200">
+                        {error}
+                    </span>
+                )}
             </div>
         );
     },

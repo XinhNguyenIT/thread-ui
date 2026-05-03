@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Common;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +23,20 @@ namespace Backend.Controllers
         }
 
         [HttpPost("upload-temp")]
-        public async Task<IActionResult> UploadTemp([FromForm] List<IFormFile> files)
+        public async Task<IActionResult> UploadTemp([FromForm] IFormFile file)
         {
-            var result = new List<string>();
+            var tempName = await _fileService.SaveTempAsync(file);
 
-            foreach (var file in files)
-            {
-                var tempName = await _fileService.SaveTempAsync(file);
-                result.Add(tempName);
-            }
+            return Ok(ApiResponse<string>.SuccessResponse(tempName, "Uploaded successfully"));
+        }
 
-            return Ok(result);
+        [HttpDelete("delete-temp")]
+        public async Task<IActionResult> DeleteTemp([FromQuery] string fullPath)
+        {
+
+            await _fileService.DeleteAsync(fullPath);
+
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "Deleted successfully"));
         }
     }
 }

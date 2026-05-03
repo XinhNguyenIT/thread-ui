@@ -3,7 +3,7 @@ import { post } from '@/utils/httpRequest';
 const routes = {
     register: '/register',
     login: '/login', // Sửa 'Login' thành 'login'
-    home: '/home',
+    home: '/',
     following: '/following',
     search: '/search',
     activity: '/activity',
