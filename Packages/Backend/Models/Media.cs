@@ -12,12 +12,12 @@ namespace Backend.Models
 
 		public string Src { get; set; }
 		public string? ProcessedSrc { get; set; }
-		public string Type { get; set; }
+		public MediaTypeEnum Type { get; set; }
 
 		public int? CommentId { get; set; }
 
 		public int? PostId { get; set; }
-		public MediaStatusEnum Status { get; set; }
+		public MediaStatusEnum Status { get; set; } = MediaStatusEnum.PROCESSING;
 
 		public virtual Comment? Comment { get; set; }
 

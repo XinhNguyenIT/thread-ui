@@ -31,6 +31,16 @@ namespace Backend.Mappers
 			};
 		}
 
+		public User ToModel(UpdateUserRequest user)
+		{
+			return new User
+			{
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Gender = user.Gender,
+			};
+		}
+
 		public AuthInternal ToAuthInternal(User user, List<RoleTypeEnum> roles, List<TokenReturn> tokens, Media? avtSrc = null)
 		{
 			return new AuthInternal
@@ -45,9 +55,9 @@ namespace Backend.Mappers
 			};
 		}
 
-		public AuthResponse ToAuthResponse(AuthInternal user)
+		public UserResponse ToAuthResponse(AuthInternal user)
 		{
-			return new AuthResponse
+			return new UserResponse
 			{
 				Email = user.Email,
 				Role = user.Roles,
@@ -55,6 +65,16 @@ namespace Backend.Mappers
 				LastName = user.LastName,
 				Gender = user.Gender,
 				AvatarSrc = _urlService.GetFullUrl(user.AvatarSrc, user.Gender)
+			};
+		}
+
+		public UpdateUserResponse ToUpdateUserResponse(User user)
+		{
+			return new UpdateUserResponse
+			{
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Gender = user.Gender,
 			};
 		}
 

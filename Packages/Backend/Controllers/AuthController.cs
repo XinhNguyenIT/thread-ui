@@ -38,7 +38,7 @@ namespace Backend.Controllers
 
             var response = _userMapper.ToAuthResponse(result);
 
-            return Ok(ApiResponse<AuthResponse>.SuccessResponse(response, "Registration successful"));
+            return Ok(ApiResponse<UserResponse>.SuccessResponse(response, "Registration successful"));
         }
 
         [Authorize]
@@ -51,7 +51,7 @@ namespace Backend.Controllers
 
             var response = _userMapper.ToAuthResponse(result);
 
-            return Ok(ApiResponse<AuthResponse>.SuccessResponse(response));
+            return Ok(ApiResponse<UserResponse>.SuccessResponse(response));
         }
 
         [HttpPost("login")]
@@ -63,7 +63,7 @@ namespace Backend.Controllers
 
             var response = _userMapper.ToAuthResponse(result);
 
-            return Ok(ApiResponse<AuthResponse>.SuccessResponse(response, "Login success"));
+            return Ok(ApiResponse<UserResponse>.SuccessResponse(response, "Login success"));
         }
 
         private void SetTokensInsideCookies(IEnumerable<TokenReturn> tokens)

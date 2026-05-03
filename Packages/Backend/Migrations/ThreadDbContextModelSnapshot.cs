@@ -50,7 +50,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Friendship", b =>
@@ -78,7 +78,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Friendships");
+                    b.ToTable("Friendships", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Hashtag", b =>
@@ -95,7 +95,7 @@ namespace Backend.Migrations
 
                     b.HasKey("HashtagId");
 
-                    b.ToTable("Hashtags");
+                    b.ToTable("Hashtags", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Like", b =>
@@ -126,7 +126,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Media", b =>
@@ -164,7 +164,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Medias");
+                    b.ToTable("Medias", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Notification", b =>
@@ -206,7 +206,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Post", b =>
@@ -241,7 +241,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.PostHashtag", b =>
@@ -256,7 +256,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("HashtagId");
 
-                    b.ToTable("PostHashtags");
+                    b.ToTable("PostHashtags", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.PostReport", b =>
@@ -286,7 +286,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostReports");
+                    b.ToTable("PostReports", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.RefreshToken", b =>
@@ -321,7 +321,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Story", b =>
@@ -344,7 +344,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Stories");
+                    b.ToTable("Stories", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.User", b =>

@@ -20,7 +20,7 @@ public class MediaProcessor : IMediaProcessor
 		if (!File.Exists(input)) return;
 		try
 		{
-			if (media.Type == "image")
+			if (media.Type == MediaTypeEnum.IMAGE)
 			{
 				var outputName = $"{name}.webp";
 				var outputPath = Path.Combine(_uploadPath, outputName);

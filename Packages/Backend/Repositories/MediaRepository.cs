@@ -44,7 +44,7 @@ namespace Backend.Repositories
 			return await _context.Medias.FindAsync(id);
 		}
 
-		public void Update(Media entity)
+		public Task Update(Media entity)
 		{
 			throw new NotImplementedException();
 		}

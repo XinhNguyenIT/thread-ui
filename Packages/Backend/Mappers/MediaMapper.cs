@@ -30,11 +30,11 @@ namespace Backend.Mappers
 
 		public MediaResponse ToMediaResponse(Media media)
 		{
-			var src = (media.Status == MediaStatusEnum.PROCESSING || media.Status == MediaStatusEnum.FAILED) ? media.Src : media.ProcessedSrc;
+			var fullSrc = _urlService.GetFullUrl(media);
 			return new MediaResponse
 			{
 				Id = media.MediaId,
-				Src = src,
+				Src = fullSrc,
 			};
 		}
 	}

@@ -7,7 +7,7 @@ using Backend.Enums;
 
 namespace Backend.DTOs.Responses
 {
-	public class AuthResponse
+	public class UserResponse
 	{
 		public string? Email { get; set; }
 		public string? LastName { get; set; }
