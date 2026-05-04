@@ -44,7 +44,7 @@
       "id": "env",
       "type": "pickString",
       "description": "Choose environment",
-      "options": ["dev", "stag"]
+      "options": ["default", "test"]
     }
   ]
 }
