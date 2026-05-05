@@ -8,4 +8,5 @@ public interface ISeedData
 	string Type { get; }
 	List<string> Roles { get; }
 	List<(User user, string password, List<RoleTypeEnum> roles)> Users { get; }
+	List<Post> Posts { get; }
 }

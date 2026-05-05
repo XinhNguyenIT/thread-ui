@@ -1,7 +1,9 @@
 
 using Backend.Dataset.Interfaces;
 using Backend.Models;
+using Backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Dataset;
 
@@ -9,13 +11,16 @@ public class IdentitySeeder
 {
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityRole> _roleManager;
+	private readonly ThreadDbContext _context;
 
 	public IdentitySeeder(
 		UserManager<User> userManager,
-		RoleManager<IdentityRole> roleManager)
+		RoleManager<IdentityRole> roleManager,
+		ThreadDbContext context)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
+		_context = context;
 	}
 
 	public async Task SeedAsync(ISeedData data)
@@ -23,6 +28,8 @@ public class IdentitySeeder
 		await SeedRoles(data);
 
 		await SeedUser(data);
+
+		await SeedPosts(data);
 	}
 
 	private async Task SeedRoles(ISeedData data)
@@ -34,6 +41,22 @@ public class IdentitySeeder
 				await _roleManager.CreateAsync(new IdentityRole(role));
 			}
 		}
+	}
+
+	private async Task SeedPosts(ISeedData data)
+	{
+		var existingPosts = await _context.Posts.ToListAsync();
+
+		foreach (var post in data.Posts)
+		{
+			var existingPost = existingPosts.FirstOrDefault(p => p.PostId == post.PostId);
+			if (existingPost == null)
+			{
+				await _context.Posts.AddAsync(post);
+			}
+		}
+
+		await _context.SaveChangesAsync();
 	}
 
 	private async Task SeedUser(ISeedData data)
