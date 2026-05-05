@@ -75,5 +75,15 @@ namespace Backend.Services
 
 			return response;
 		}
+
+		public async Task<List<PostResponse>> GetPagedPosts(int page = 1, int pageSize = 10)
+		{
+			var userId = _userContext.UserId;
+			var posts = await _unitOfWork.PostRepository.GetPagedPost(userId, page, pageSize);
+
+			if (posts.Count == 0) return new List<PostResponse>();
+
+			return posts;
+		}
 	}
 }

@@ -33,6 +33,9 @@ namespace Backend.Models
 
 			builder.Entity<Post>(entity =>
 			{
+				entity.HasIndex(p => p.CreateAt);
+				entity.HasIndex(p => p.UserId);
+
 				entity.HasOne(p => p.Author)
 					  .WithMany(u => u.Posts)
 					  .HasForeignKey(p => p.UserId);

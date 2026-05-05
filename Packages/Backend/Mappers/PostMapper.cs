@@ -52,7 +52,6 @@ namespace Backend.Mappers
 				Author = _userMapper.ToUserCreatePostResponse(user, avatar),
 				Caption = post.Content,
 				CreateAt = post.CreateAt,
-				IsAvatar = post.IsAvatar,
 				Medias = medias,
 				PostId = post.PostId,
 				PrivacySetting = post.PrivacySetting
