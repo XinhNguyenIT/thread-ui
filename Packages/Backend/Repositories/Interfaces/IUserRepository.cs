@@ -9,4 +9,5 @@ public interface IUserRepository : IGenericRepository<User>
 	Task<User> CreateUserAsync(User user, string password);
 	Task<User> LoginAsync(string email, string password);
 	Task<User?> GetByIdAsync(string id);
+	Task<User?> GetByRefreshTokenAsync(string refreshToken);
 }

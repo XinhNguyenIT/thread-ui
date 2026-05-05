@@ -4,6 +4,7 @@ using Backend.Exceptions;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
@@ -11,11 +12,13 @@ namespace Backend.Repositories
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
+		private readonly ThreadDbContext _context;
 
-		public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager)
+		public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager, ThreadDbContext context)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_context = context;
 		}
 
 		public async Task<User> CreateUserAsync(User user, string password)
@@ -93,6 +96,15 @@ namespace Backend.Repositories
 		public void Delete(User entity)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
+		{
+			return await _context.RefreshTokens
+					.Where(t => !t.IsRevoked && t.Token == refreshToken && t.ExpiryDate > DateTime.UtcNow.AddHours(7))
+					.OrderByDescending(t => t.CreatedAt)
+					.Select(t => t.User)
+					.FirstOrDefaultAsync();
 		}
 	}
 }
