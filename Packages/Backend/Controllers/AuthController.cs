@@ -41,11 +41,13 @@ namespace Backend.Controllers
             return Ok(ApiResponse<UserResponse>.SuccessResponse(response, "Registration successful"));
         }
 
-        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
-            var result = await _authService.Me();
+            var refreshToken = Request.Cookies["refresh"];
+            if (string.IsNullOrEmpty(refreshToken)) throw new UnauthorizedAccessException("No refresh token provided");
+
+            var result = await _authService.Me(refreshToken);
 
             SetTokensInsideCookies(result.Tokens);
 

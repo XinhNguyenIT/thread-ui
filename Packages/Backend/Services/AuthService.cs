@@ -43,11 +43,9 @@ namespace Backend.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<AuthInternal> Me()
+		public async Task<AuthInternal> Me(string refreshToken)
 		{
-			var userId = _userContext.UserId;
-
-			var currentUser = await _unitOfWork.UserRepository.GetByIdAsync(userId) ?? throw new BadHttpRequestException("User not found");
+			var currentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken) ?? throw new BadHttpRequestException("User not found");
 
 			var roles = await _unitOfWork.RoleRepository.GetByUserAsync(currentUser);
 
