@@ -25,6 +25,7 @@ namespace Backend.Models
 		public virtual ICollection<Media> Medias { get; set; } = new List<Media>();
 
 		public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+		public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
 		public virtual ICollection<PostReport> Reports { get; set; } = new List<PostReport>();
 		public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
