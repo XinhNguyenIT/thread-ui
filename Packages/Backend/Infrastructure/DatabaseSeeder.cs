@@ -35,6 +35,13 @@ namespace Backend.Infrastructure
 
 			// seed identity
 			await _identitySeeder.SeedAsync(data);
+
+			// seed posts
+			foreach (var post in data.Posts)
+			{
+				_db.Posts.Add(post);
+			}
+			await _db.SaveChangesAsync();
 		}
 
 		public async Task ClearDataAsync()
