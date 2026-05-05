@@ -101,7 +101,7 @@ public class JwtService : IJwtService
 
 		var result = new TokenReturn
 		{
-			Token = new JwtSecurityTokenHandler().WriteToken(token),
+			Token = type == TokenTypeEnum.ACCESS ? new JwtSecurityTokenHandler().WriteToken(token) : Guid.NewGuid().ToString(),
 			Expires = expires,
 			Type = type,
 		};

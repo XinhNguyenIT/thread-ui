@@ -23,7 +23,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("upload-temp")]
-        public async Task<IActionResult> UploadTemp([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadTemp(IFormFile file)
         {
             var tempName = await _fileService.SaveTempAsync(file);
 

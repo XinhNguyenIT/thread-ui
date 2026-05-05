@@ -12,6 +12,6 @@ namespace Backend.DTOs.Responses
 		public string? LastName { get; set; }
 		public string? FirstName { get; set; }
 		public GenderTypeEnum Gender { get; set; }
-		public string? AvatarSrc { get; set; }
+		public MediaResponse? Avatar { get; set; }
 	}
 }

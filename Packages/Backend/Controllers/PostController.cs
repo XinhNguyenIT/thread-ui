@@ -6,10 +6,12 @@ using Backend.Common;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
 using Backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PostController : ControllerBase
@@ -27,6 +29,15 @@ namespace Backend.Controllers
             var result = await _postService.CreatePost(request);
 
             return Ok(ApiResponse<PostResponse>.SuccessResponse(result, "Post created successfully"));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPosts([FromQuery] ListPostRequest request)
+        {
+            var result = await _postService.GetPagedPosts(request.Page, request.PageSize);
+
+            return Ok(ApiResponse<List<PostResponse>>.SuccessResponse(result, "Get posts successfully"));
         }
     }
 }

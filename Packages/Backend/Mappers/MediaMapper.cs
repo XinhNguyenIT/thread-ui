@@ -34,6 +34,7 @@ namespace Backend.Mappers
 			return new MediaResponse
 			{
 				Id = media.MediaId,
+				Type = media.Type,
 				Src = fullSrc,
 			};
 		}

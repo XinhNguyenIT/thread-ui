@@ -14,10 +14,12 @@ namespace Backend.Mappers
 	public class UserMapper
 	{
 		private readonly IUrlService _urlService;
+		private readonly MediaMapper _mediaMapper;
 
-		public UserMapper(IUrlService urlService)
+		public UserMapper(IUrlService urlService, MediaMapper mediaMapper)
 		{
 			_urlService = urlService;
+			_mediaMapper = mediaMapper;
 		}
 
 		public User ToModel(RegisterRequest user)
@@ -86,7 +88,7 @@ namespace Backend.Mappers
 				FirstName = user.FirstName,
 				LastName = user.LastName,
 				Gender = user.Gender,
-				AvatarSrc = _urlService.GetFullUrl(avatar, user.Gender)
+				Avatar = avatar != null ? _mediaMapper.ToMediaResponse(avatar) : null
 			};
 		}
 	}
