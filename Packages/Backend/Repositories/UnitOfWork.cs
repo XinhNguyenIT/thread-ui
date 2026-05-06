@@ -16,8 +16,11 @@ public class UnitOfWork : IUnitOfWork
 	public IPostRepository PostRepository { get; }
 
 	public IMediaRepository MediaRepository { get; }
+	public ILikeRepository LikeRepository { get; }
+	public ICommentRepository CommentRepository { get; }
+	public IStoryRepository StoryRepository { get; }
 
-	public UnitOfWork(ThreadDbContext context, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IRoleRepository roleRepository, IPostRepository postRepository, IMediaRepository mediaRepository)
+	public UnitOfWork(ThreadDbContext context, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IRoleRepository roleRepository, IPostRepository postRepository, IMediaRepository mediaRepository, ILikeRepository likeRepository, ICommentRepository commentRepository, IStoryRepository storyRepository)
 	{
 		_context = context;
 		UserRepository = userRepository;
@@ -25,6 +28,9 @@ public class UnitOfWork : IUnitOfWork
 		RoleRepository = roleRepository;
 		PostRepository = postRepository;
 		MediaRepository = mediaRepository;
+		LikeRepository = likeRepository;
+		CommentRepository = commentRepository;
+		StoryRepository = storyRepository;
 	}
 
 	public async Task BeginTransactionAsync()
