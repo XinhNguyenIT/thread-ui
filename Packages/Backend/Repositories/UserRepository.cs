@@ -58,13 +58,9 @@ namespace Backend.Repositories
 
 		public Task<User?> GetByIdAsync(string id)
 		{
-			throw new NotImplementedException();
+			return _userManager.FindByIdAsync(id);
 		}
 
-		public Task<User?> GetByIdAsync(int id)
-		{
-			throw new NotImplementedException();
-		}
 
 		public Task AddAsync(User entity)
 		{
@@ -105,6 +101,11 @@ namespace Backend.Repositories
 					.OrderByDescending(t => t.CreatedAt)
 					.Select(t => t.User)
 					.FirstOrDefaultAsync();
+		}
+
+		public Task<User?> GetByIdAsync(int id)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

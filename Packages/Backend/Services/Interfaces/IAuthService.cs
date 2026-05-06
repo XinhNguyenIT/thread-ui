@@ -9,5 +9,8 @@ public interface IAuthService
 	Task<AuthInternal> Login(LoginRequest item);
 	Task Logout(int userId);
 	Task<AuthInternal> Register(RegisterRequest request);
-	Task<AuthInternal> Me(string refreshToken);
+	Task<AuthInternal> Me();
+	Task<AuthInternal> ByRefreshToken(string refreshToken);
+
+
 }

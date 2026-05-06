@@ -7,6 +7,6 @@ namespace Backend.Services.Interfaces
 	public interface IJwtService
 	{
 		public string RevokeToken(string userId, string token);
-		public Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> role);
+		public Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> role, bool isCreateRefreshToken = true);
 	}
 }

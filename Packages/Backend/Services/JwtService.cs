@@ -23,13 +23,15 @@ public class JwtService : IJwtService
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> roles)
+	public async Task<List<TokenReturn>> CreateTokenForUser(User user, List<RoleTypeEnum> roles, bool isCreateRefreshToken = true)
 	{
 		var tokenNames = new List<string> { "access", "refresh" };
 		var results = new List<TokenReturn>();
 
 		foreach (var tokenName in tokenNames)
 		{
+			if (tokenName == "refresh" && !isCreateRefreshToken) continue;
+
 			var type = tokenName == "access" ? TokenTypeEnum.ACCESS : TokenTypeEnum.REFRESH;
 			var token = GenerateToken(user.Id, user.Email, roles, type);
 			results.Add(token);

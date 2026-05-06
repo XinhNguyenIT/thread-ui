@@ -29,7 +29,11 @@ axiosInstance.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                await axios.post(`${import.meta.env.VITE_API_URL}/api/Auth/refresh`, {}, { withCredentials: true });
+                await axios.post(
+                    `${import.meta.env.VITE_API_URL}/api/Auth/refresh-token`,
+                    {},
+                    { withCredentials: true },
+                );
 
                 return axiosInstance.request(originalRequest);
             } catch (er) {

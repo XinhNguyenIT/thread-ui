@@ -41,13 +41,11 @@ namespace Backend.Controllers
             return Ok(ApiResponse<UserResponse>.SuccessResponse(response, "Registration successful"));
         }
 
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
-            var refreshToken = Request.Cookies["refresh"];
-            if (string.IsNullOrEmpty(refreshToken)) throw new UnauthorizedAccessException("No refresh token provided");
-
-            var result = await _authService.Me(refreshToken);
+            var result = await _authService.Me();
 
             SetTokensInsideCookies(result.Tokens);
 
@@ -60,6 +58,21 @@ namespace Backend.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.Login(request);
+
+            SetTokensInsideCookies(result.Tokens);
+
+            var response = _userMapper.ToAuthResponse(result);
+
+            return Ok(ApiResponse<UserResponse>.SuccessResponse(response, "Login success"));
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refresh"];
+            if (string.IsNullOrEmpty(refreshToken)) throw new BadHttpRequestException("Refresh token is missing");
+
+            var result = await _authService.ByRefreshToken(refreshToken);
 
             SetTokensInsideCookies(result.Tokens);
 
