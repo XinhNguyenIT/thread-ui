@@ -12,6 +12,8 @@ namespace Backend.Models
 		public int? ParentComment { get; set; }
 
 		public required string UserId { get; set; }
+		public int LikeCount { get; set; } = 0;
+
 
 		public required int PostId { get; set; }
 

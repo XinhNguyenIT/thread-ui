@@ -33,6 +33,8 @@ namespace Backend.Models
 
 			builder.Entity<Post>(entity =>
 			{
+				entity.ToTable(c => c.HasCheckConstraint("CK_Posts_LikeCount_Min", "[LikeCount] >= 0"));
+
 				entity.HasIndex(p => p.CreateAt);
 				entity.HasIndex(p => p.UserId);
 
@@ -68,7 +70,6 @@ namespace Backend.Models
 					  	.WithMany(p => p.PostHashtags)
 					  	.HasForeignKey(ph => ph.PostId);
 
-
 				entity.HasOne(ph => ph.Hashtag)
 					  .WithMany(h => h.PostHashtags)
 					  .HasForeignKey(ph => ph.HashtagId);
@@ -80,6 +81,8 @@ namespace Backend.Models
 						.WithMany(u => u.Comments)
 						.HasForeignKey(c => c.UserId)
 						.OnDelete(DeleteBehavior.NoAction);
+
+				entity.ToTable(c => c.HasCheckConstraint("CK_Comments_LikeCount_Min", "[LikeCount] >= 0"));
 			});
 
 			builder.Entity<Friendship>(entity =>
@@ -98,7 +101,7 @@ namespace Backend.Models
 
 			builder.Entity<Like>(entity =>
 			{
-				entity.HasOne(l => l.FromUser)
+				entity.HasOne(l => l.User)
 						.WithMany(u => u.Likes)
 						.HasForeignKey(l => l.UserId);
 
@@ -143,6 +146,8 @@ namespace Backend.Models
 				entity.HasOne(s => s.User)
 						.WithMany(u => u.Stories)
 						.HasForeignKey(s => s.UserId);
+
+				entity.ToTable(c => c.HasCheckConstraint("CK_Stories_LikeCount_Min", "[LikeCount] >= 0"));
 			});
 
 			builder.Entity<PostReport>(entity =>

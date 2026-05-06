@@ -16,6 +16,7 @@ namespace Backend.Models
 		public PrivacySettingEnum PrivacySetting { get; set; }
 
 		public bool IsReported { get; set; } = false;
+		public int LikeCount { get; set; } = 0;
 
 		public required string UserId { get; set; }
 		public bool IsAvatar { get; set; } = false;

@@ -9,6 +9,9 @@ public interface IUnitOfWork : IDisposable
 	IRoleRepository RoleRepository { get; }
 	IPostRepository PostRepository { get; }
 	IMediaRepository MediaRepository { get; }
+	ILikeRepository LikeRepository { get; }
+	ICommentRepository CommentRepository { get; }
+	IStoryRepository StoryRepository { get; }
 
 	Task BeginTransactionAsync();
 	Task CommitAsync();
