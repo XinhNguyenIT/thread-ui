@@ -43,13 +43,31 @@ namespace Backend.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<AuthInternal> Me(string refreshToken)
+		public async Task<AuthInternal> Me()
+		{
+			var userId = _userContext.UserId;
+			var currentUser = await _unitOfWork.UserRepository.GetByIdAsync(userId) ?? throw new BadHttpRequestException("User not found");
+
+			var roles = await _unitOfWork.RoleRepository.GetByUserAsync(currentUser);
+
+			var tokens = await _jwtService.CreateTokenForUser(currentUser, roles);
+
+			var avtSrc = await _unitOfWork.MediaRepository.GetAvtSrcByUserId(currentUser.Id);
+
+			var response = _userMapper.ToAuthInternal(currentUser, roles, tokens, avtSrc);
+
+			return response;
+		}
+
+		public async Task<AuthInternal> ByRefreshToken(string refreshToken)
 		{
 			var currentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken) ?? throw new BadHttpRequestException("User not found");
 
 			var roles = await _unitOfWork.RoleRepository.GetByUserAsync(currentUser);
 
-			var tokens = await _jwtService.CreateTokenForUser(currentUser, roles);
+			var isCreateRefreshToken = false;
+
+			var tokens = await _jwtService.CreateTokenForUser(currentUser, roles, isCreateRefreshToken);
 
 			var avtSrc = await _unitOfWork.MediaRepository.GetAvtSrcByUserId(currentUser.Id);
 
