@@ -6,6 +6,7 @@ import Profile from '@/pages/User/Profile';
 import Login from '@/pages/User/Login';
 import Register from '@/pages/User/Register';
 import PostDetail from '@/pages/User/Search/PostDetail';
+import Testing from '@/pages/User/Testing';
 
 const publicRoutes = [
     { path: config.routes.login, component: <Login /> },
@@ -17,6 +18,7 @@ const privateRoutes = [
     { path: config.routes.search, component: <Search /> },
     { path: config.routes.activity, component: <Activity /> },
     { path: config.routes.profile, component: <Profile /> },
+    { path: config.routes.testing, component: <Testing /> },
     // Trong routes.ts hoặc App.tsx
     { path: '/post-detail/:id', component: <PostDetail /> },
 ];
