@@ -2,10 +2,22 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Home, Search, Plus, Heart, User, Menu, Settings, Moon, LogOut, MessageSquareWarning } from 'lucide-react';
 import ActionButton from '@/components/Button/ActionButton';
 import Image from '@/components/Image';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '@/redux/slices/authSlice';
 
 export default function Sidebar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        // dispatch(logout());
+        // localStorage.removeItem('accessToken'); 
+        // navigate('/login');
+    };
 
     // Xử lý đóng menu khi click ra ngoài vùng menu
     useEffect(() => {
@@ -60,7 +72,7 @@ export default function Sidebar() {
 
                         <div className="h-[1px] bg-zinc-100 my-1 mx-2" />
 
-                        <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-zinc-50 transition-colors">
+                        <button onClick={handleLogout} className="w-full flex items-center justify-between px-4 py-3 hover:bg-zinc-50 transition-colors">
                             <span className="font-medium text-[15px]">Log out</span>
                             <LogOut size={18} />
                         </button>

@@ -3,6 +3,7 @@ import Avatar from '@/components/Avatar';
 import ActionButton from '@/components/Button/ActionButton';
 import Image from '@/components/Image';
 import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-react';
+import { PrivacyTypeEnum } from '@/common/privacyTypeEnum';
 
 interface PostItemProps {
     authorName: string;
@@ -10,7 +11,6 @@ interface PostItemProps {
     content: string;
     timestamp: string;
     avatarUrl?: string;
-    // SỬA TẠI ĐÂY: Đổi postImage thành postImages (mảng các chuỗi)
     postImages?: string[];
     likes: number | string;
     replies: number | string;

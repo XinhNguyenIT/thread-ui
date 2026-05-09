@@ -17,4 +17,9 @@ export const authActions = {
         const response = await axiosInstance.get(AUTH_API.ME, { passError: true });
         return response.data;
     }),
+    logout: createAsyncThunk("logout",async () =>{
+        const response = await axiosInstance.get(AUTH_API.LOGOUT, { passError: true });
+        return response.data;
+    })
+
 };

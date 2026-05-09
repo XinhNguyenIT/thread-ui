@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react';
 import Spinner from './components/Spinner';
 import DefaultLayout from './layouts/DefaultLayout';
 import ErrorDialog from './components/Dialog/ErrorDialog';
-import { handleResetStatus } from './redux/slices/statusSlice';
+import { handleResetStatus, handleSuccessStatus } from './redux/slices/statusSlice';
+import { getPost } from './api/post/fileService';
 
 export default function App() {
     const dispatch = useAppDispatch();
@@ -19,6 +20,13 @@ export default function App() {
     const { isError, isLoading, ...statusToShow } = status;
 
     const { information } = useAppSelector((state) => state.auth);
+
+    // test
+    const a = async () => {
+        const demo = await getPost({page: 1, pageSize: 25})
+        console.log(demo.data)
+    }
+
 
     useEffect(() => {
         const getUser = async () => {
@@ -30,9 +38,11 @@ export default function App() {
                 setLoading(false);
             }
         };
-
+        console.log(a());
         !information && getUser();
     }, []);
+
+
 
     if (loading) return <Spinner />;
     return (

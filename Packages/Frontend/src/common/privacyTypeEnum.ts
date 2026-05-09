@@ -3,3 +3,8 @@ export enum PrivacyTypeEnum {
     FRIEND = 'FRIEND',
     PUBLIC = 'PUBLIC',
 }
+
+export type PrivacyType = 
+    | 'PRIVATE'
+    | 'FRIEND'
+    | 'PUBLIC'

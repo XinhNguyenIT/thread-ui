@@ -66,7 +66,11 @@ const AuthSlice = createSlice({
             .addCase(authActions.getCurrentUser.rejected, (state) => {
                 state.information = null;
                 state.isAuthenticated = false;
-            }),
+            })
+            .addCase(authActions.logout.fulfilled, (state) => {
+                state.information = null;
+                state.isAuthenticated = false;
+            })
 });
 
 export default AuthSlice.reducer;

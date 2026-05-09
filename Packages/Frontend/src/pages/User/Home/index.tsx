@@ -11,7 +11,6 @@ const HomePage = () => {
     return (
         <ContentUILayout>
             <CreatePostForm />
-            {/* Hiển thị bài viết dựa trên tab được nhấn ở Header */}
             {activeTab === 'For you' && <PostList type="recommend" />}
             {activeTab === 'Following' && <PostList type="following" />}
             {activeTab === 'Ghost posts' && <PostList type="ghost" />}

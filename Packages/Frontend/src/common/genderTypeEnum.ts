@@ -4,3 +4,9 @@ export enum GenderTypeEnum {
     OTHER = 'OTHER',
     UNKNOWN = 'UNKNOWN',
 }
+
+export type GenderType =  
+    | "MALE"
+    | "FEMALE"
+    | "OTHER"
+    | "UNKNOWN";
