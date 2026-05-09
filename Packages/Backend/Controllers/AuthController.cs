@@ -54,6 +54,17 @@ namespace Backend.Controllers
             return Ok(ApiResponse<UserResponse>.SuccessResponse(response));
         }
 
+        [Authorize]
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _authService.Logout();
+
+            CookieHelper.ClearCookie(Response);
+
+            return NoContent();
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
