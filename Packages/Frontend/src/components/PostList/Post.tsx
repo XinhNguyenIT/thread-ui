@@ -5,8 +5,9 @@ import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-reac
 import { GenderTypeEnum } from "@/common/genderTypeEnum"
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum"
 import { formatPostTime } from '@/utils/timeFormat';
+import LikeButton from './LikeButton';
 
-export interface Post {
+export interface PostProps {
     author?: {
         userId?: string
         firstName?: string
@@ -26,9 +27,11 @@ export interface Post {
     }[]
     postId?: number
     privacySetting?: PrivacyTypeEnum
+    // test
+    isLiked?: boolean
 }
 
-const PostItem = ({
+const Post = ({
     author = {
         gender: GenderTypeEnum.UNKNOWN
     },
@@ -39,14 +42,16 @@ const PostItem = ({
     likesCount = 0,
     medias = [],
     postId,
-    privacySetting = PrivacyTypeEnum.PRIVATE
-}: Post) => {
+    privacySetting = PrivacyTypeEnum.PRIVATE,
+    // test
+    isLiked = false
+}: PostProps) => {
     return (
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
             {/* Cột trái: Avatar */}
             <div className="flex flex-col items-center gap-2">
                 <Avatar src={author?.avatarSrc} size="lg" />
-                <div className="w-[2px] flex-1 bg-zinc-100 rounded-full my-1"></div>
+                <div className="w-0.5 flex-1 bg-zinc-100 rounded-full my-1"></div>
             </div>
 
             {/* Cột phải: Nội dung bài viết */}
@@ -77,7 +82,7 @@ const PostItem = ({
                                           : 'w-[32.5%]';
 
                                 return (
-                                    <div key={index} className={`flex-shrink-0 ${itemWidth} aspect-[4/5] rounded-xl overflow-hidden border border-zinc-200 snap-start`}>
+                                    <div key={index} className={`shrink-0 ${itemWidth} aspect-4/5 rounded-xl overflow-hidden border border-zinc-200 snap-start`}>
                                         {img.src && 
                                             <Image
                                                 src={img.src}
@@ -93,9 +98,15 @@ const PostItem = ({
                     </div>
                 )}
 
-                {/* Hàng nút tương tác - Đã chỉnh icon đều nhau size 18 cho dễ nhìn */}
                 <div className="flex gap-4 mt-3 -ml-2">
-                    <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" />
+                    {postId && (
+                        <LikeButton
+                            postId={postId} 
+                            initialLikesCount={likesCount} 
+                            initialIsLiked={isLiked} 
+                        />
+                    )}
+                    {/* <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" /> */}
                     <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" />
                     <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
                     <ActionButton icon={<Send size={12} />} ariaLabel="Share" />
@@ -105,4 +116,4 @@ const PostItem = ({
     );
 };
 
-export default PostItem;
+export default Post;

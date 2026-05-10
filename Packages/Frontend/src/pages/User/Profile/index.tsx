@@ -1,13 +1,15 @@
 import { getPost } from "@/api/post/fileService";
 import { GenderTypeEnum } from "@/common/genderTypeEnum";
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum";
+import AvatarUpload from "@/components/Avatar/AvatarUpload";
 import BaseButton from "@/components/Button/BaseButton";
 import ContentUILayout from "@/components/ContentUILayout";
 import CreatePostForm from "@/components/Forms/CreatePostForm";
 import UpdateProfileForm from "@/components/Forms/UpdateProfileForm";
 import Image from "@/components/Image";
-import PostItem, { Post } from "@/components/PostList/Post";
+import Post, { PostProps } from "@/components/PostList/Post";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { usePosts } from "@/hooks/usePost";
 import { textNormalize } from "@/utils/textNormalize";
 import { useEffect, useState } from "react";
 import { BsInstagram } from "react-icons/bs";
@@ -24,7 +26,7 @@ const MOCK_USER_DATA = {
     avatarSrc: "",
 };
 
-const MOCK_USER_POST: Post[] = [{
+const MOCK_USER_POST: PostProps[] = [{
     author : {
         userId: '11111111-1111-1111-1111-111111111111', 
         lastName: 'Demo', 
@@ -44,30 +46,19 @@ const MOCK_USER_POST: Post[] = [{
 const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<Tab>("Thread");
     const [isFormOpen, setIsFormOpen] = useState(false);
-    // api save posts
-    const [posts, setPosts] = useState<Post[]>([]);
+    
+    const { posts } = usePosts(1,13)
 
     const userFromStore = useAppSelector((state) => state.auth.information)
-    
     const user = userFromStore || MOCK_USER_DATA;
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
     };
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const data = await getPost({page: 1, pageSize: 25})
-                console.log("Posts: ", data)
-                setPosts(data.data)
-            } catch (error) {
-                console.log("Post call error:", error)
-            }
-        }
-
-        fetchPosts()
-    },[])
+    const handleRefresh = () => {
+        window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
+    };
 
     return (
         <ContentUILayout>
@@ -80,9 +71,13 @@ const ProfilePage = () => {
                             <h3 className="text-2xl font-bold">{`${user.lastName} ${user.firstName}`}</h3>
                             <h5 className="text-[15px]">{textNormalize(user.lastName).toLowerCase()}.{textNormalize(user.firstName).toLowerCase()}</h5>
                         </div>
-                        <div className="size-24 rounded-full overflow-hidden">
-                            <Image src={user.avatarSrc} alt="avatar" /> {/*Trong Image có default data r nếu truyền rỗng*/}
-                        </div>
+                        {/* <div className="size-24 rounded-full overflow-hidden">
+                            <Image src={user.avatarSrc} alt="avatar" />
+                        </div> */}
+                        <AvatarUpload 
+                            currentSrc={user.avatarSrc} 
+                            onSuccess={handleRefresh} 
+                        />
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="text-gray-500">-- người theo dõi</p>
@@ -126,7 +121,7 @@ const ProfilePage = () => {
                                 <CreatePostForm />
                                 {posts && posts.length > 0 ? (
                                     posts.map((post) => (
-                                        <PostItem key={post.postId} {...post} />
+                                        <Post key={post.postId} {...post} />
                                     ))
                                 ) : (
                                     <div className="py-16 text-center">
