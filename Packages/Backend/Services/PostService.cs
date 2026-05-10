@@ -18,7 +18,7 @@ namespace Backend.Services
 		private readonly IFileService _fileService;
 		private readonly IMediaQueue _mediaQueue;
 
-		public PostService(UserContext userContext, PostMapper postMapper, IUnitOfWork unitOfWork, IFileService fileService, IMediaQueue mediaQueue)
+		public PostService(UserContext userContext, PostMapper postMapper, IUnitOfWork unitOfWork, IFileService fileService, IMediaQueue mediaQueue, UserMapper userMapper)
 		{
 			_userContext = userContext;
 			_postMapper = postMapper;
@@ -83,7 +83,9 @@ namespace Backend.Services
 
 			if (posts.Count == 0) return new List<PostResponse>();
 
-			return posts;
+			var response = posts.Select(p => _postMapper.ToPostResponse(p)).ToList();
+
+			return response;
 		}
 	}
 }

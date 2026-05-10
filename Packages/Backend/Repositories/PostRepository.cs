@@ -50,7 +50,7 @@ namespace Backend.Repositories
 			return await _context.Posts.FindAsync(id);
 		}
 
-		public async Task<List<PostResponse>> GetPagedPost(string userId, int page = 1, int pageSize = 10)
+		public async Task<List<Post>> GetPagedPost(string userId, int page = 1, int pageSize = 10)
 		{
 			if (page < 1) page = 1;
 			if (pageSize < 1) pageSize = 10;
@@ -63,46 +63,15 @@ namespace Backend.Repositories
 				.Select(f => f.FromUserId == userId ? f.ToUserId : f.FromUserId);
 
 			return await _context.Posts
-				.AsNoTracking()
+				.Include(p => p.Comments)
+				.Include(c => c.Author)
+				.Include(p => p.Medias)
 				.Where(p => p.PrivacySetting != Enums.PrivacySettingEnum.PRIVATE ||
 						p.UserId == userId ||
 						(p.PrivacySetting == Enums.PrivacySettingEnum.FRIEND && friendIds.Contains(p.UserId)))
 				.OrderByDescending(p => p.CreateAt)
 				.Skip(skipCount)
 				.Take(pageSize)
-				.Select(p => new PostResponse
-				{
-					PostId = p.PostId,
-					Author = new UserBasicResponse
-					{
-						UserId = p.UserId,
-						LastName = p.Author.LastName,
-						FirstName = p.Author.FirstName,
-						Gender = p.Author.Gender,
-						Avatar = p.Author.Posts
-							.Where(ph => ph.IsAvatar)
-							.SelectMany(ph => ph.Medias)
-							.Select(m => new MediaResponse
-							{
-								Id = m.MediaId,
-								Type = m.Type,
-								Src = m.Src
-							})
-							.FirstOrDefault()
-					},
-					Caption = p.Content,
-					PrivacySetting = p.PrivacySetting,
-					LikesCount = p.Likes.Count(),
-					CommentsCount = p.Comments.Count(),
-					CreateAt = p.CreateAt,
-					IsAvatar = p.IsAvatar,
-					Medias = p.Medias.Select(m => new MediaResponse
-					{
-						Id = m.MediaId,
-						Type = m.Type,
-						Src = m.Src
-					}).ToList(),
-				})
 				.ToListAsync();
 		}
 

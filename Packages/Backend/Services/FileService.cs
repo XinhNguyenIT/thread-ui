@@ -50,7 +50,7 @@ namespace Backend.Services
 				Src = fileName,
 			};
 
-			return _urlMapper.GetFullUrl(newMedia, user.Gender);
+			return _urlMapper.GetFullUrlForAvatar(newMedia, user.Gender);
 		}
 
 		public Task<string> MoveToPermanentAsync(string tempFileName)

@@ -28,14 +28,15 @@ namespace Backend.Mappers
 
 		}
 
-		public MediaResponse ToMediaResponse(Media media)
+		public MediaResponse ToMediaResponse(Media media, GenderTypeEnum? gender = null)
 		{
-			var fullSrc = _urlService.GetFullUrl(media);
 			return new MediaResponse
 			{
 				Id = media.MediaId,
 				Type = media.Type,
-				Src = fullSrc,
+				Src = gender != null
+						? _urlService.GetFullUrlForAvatar(media, gender.Value)
+						: _urlService.GetFullUrlDefault(media)
 			};
 		}
 	}
