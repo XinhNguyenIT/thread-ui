@@ -1,6 +1,7 @@
 import { GenderTypeEnum } from '@/common/genderTypeEnum';
 import { PrivacyTypeEnum } from '@/common/privacyTypeEnum';
 import Post from './Post';
+import { usePosts } from '@/hooks/usePost';
 
 interface PostListProps {
     type: 'recommend' | 'following' | 'ghost';
@@ -65,9 +66,11 @@ const PostList = ({ type }: PostListProps) => {
         }
     ];
 
+    const { posts } = usePosts(1,7)
+
     return (
         <div className="w-full max-w-175 mx-auto bg-white">
-            {dummyPosts.map((post) => (
+            {posts.map((post) => (
                 <Post key={post.postId} {...post} />
             ))}
 
