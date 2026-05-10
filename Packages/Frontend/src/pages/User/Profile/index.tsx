@@ -1,5 +1,6 @@
 import { getPost } from "@/api/post/fileService";
 import { GenderTypeEnum } from "@/common/genderTypeEnum";
+import { PrivacyTypeEnum } from "@/common/privacyTypeEnum";
 import BaseButton from "@/components/Button/BaseButton";
 import ContentUILayout from "@/components/ContentUILayout";
 import CreatePostForm from "@/components/Forms/CreatePostForm";
@@ -28,7 +29,7 @@ const MOCK_USER_POST: Post[] = [{
         userId: '11111111-1111-1111-1111-111111111111', 
         lastName: 'Demo', 
         firstName: '1', 
-        gender: 'MALE'
+        gender: GenderTypeEnum.MALE
     },
     caption : "Nội dung này vi phạm tiêu chuẩn cộng đồng và đã bị báo cáo.",
     commentsCount : 0,
@@ -37,7 +38,7 @@ const MOCK_USER_POST: Post[] = [{
     likesCount: 0,
     medias: [],
     postId:  18,
-    privacySetting: "PUBLIC"
+    privacySetting: PrivacyTypeEnum.PRIVATE
 }]
 
 const ProfilePage = () => {

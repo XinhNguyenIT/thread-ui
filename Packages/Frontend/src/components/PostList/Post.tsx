@@ -2,8 +2,8 @@ import Avatar from '@/components/Avatar';
 import ActionButton from '@/components/Button/ActionButton';
 import Image from '@/components/Image';
 import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-react';
-import { GenderType, GenderTypeEnum } from "@/common/genderTypeEnum"
-import { PrivacyType, PrivacyTypeEnum } from "@/common/privacyTypeEnum"
+import { GenderTypeEnum } from "@/common/genderTypeEnum"
+import { PrivacyTypeEnum } from "@/common/privacyTypeEnum"
 import { formatPostTime } from '@/utils/timeFormat';
 
 export interface Post {
@@ -11,7 +11,7 @@ export interface Post {
         userId?: string
         firstName?: string
         lastName?: string
-        gender?: GenderType
+        gender?: GenderTypeEnum
         avatarSrc?: string
     }
     caption?: string
@@ -25,12 +25,12 @@ export interface Post {
         type?: string
     }[]
     postId?: number
-    privacySetting?: PrivacyType
+    privacySetting?: PrivacyTypeEnum
 }
 
 const PostItem = ({
     author = {
-        gender: 'UNKNOWN'
+        gender: GenderTypeEnum.UNKNOWN
     },
     caption,
     commentsCount = 0,
@@ -39,7 +39,7 @@ const PostItem = ({
     likesCount = 0,
     medias = [],
     postId,
-    privacySetting = 'PRIVATE'
+    privacySetting = PrivacyTypeEnum.PRIVATE
 }: Post) => {
     return (
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
