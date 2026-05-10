@@ -5,6 +5,8 @@ import Image from '@/components/Image';
 import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-react';
 import { PrivacyTypeEnum } from '@/common/privacyTypeEnum';
 
+// OLD AND NOT USE
+
 interface PostItemProps {
     authorName: string;
     username: string;
@@ -51,10 +53,6 @@ const PostItem = ({
 
                 {postImages && postImages.length > 0 && (
                     <div className="mt-3 w-full scrollbar-hide">
-                        {/* - flex: Cho phép các ảnh nằm ngang
-          - overflow-x-auto: Nếu tổng ảnh quá rộng sẽ cho lướt ngang
-          - gap-1: Khoảng cách giữa các ảnh là 4px
-        */}
                         <div className="flex gap-1 overflow-x-auto flex-nowrap scrollbar-hide snap-x snap-mandatory ">
                             {postImages.map((img, index) => {
                                 // Logic tính toán độ rộng:

@@ -21,13 +21,6 @@ export default function App() {
 
     const { information } = useAppSelector((state) => state.auth);
 
-    // test
-    const a = async () => {
-        const demo = await getPost({page: 1, pageSize: 25})
-        console.log(demo.data)
-    }
-
-
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -38,7 +31,6 @@ export default function App() {
                 setLoading(false);
             }
         };
-        console.log(a());
         !information && getUser();
     }, []);
 

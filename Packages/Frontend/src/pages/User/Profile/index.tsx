@@ -6,8 +6,9 @@ import ContentUILayout from "@/components/ContentUILayout";
 import CreatePostForm from "@/components/Forms/CreatePostForm";
 import UpdateProfileForm from "@/components/Forms/UpdateProfileForm";
 import Image from "@/components/Image";
-import PostItem, { Post } from "@/components/PostList/Post";
+import Post, { PostProps } from "@/components/PostList/Post";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { usePosts } from "@/hooks/usePost";
 import { textNormalize } from "@/utils/textNormalize";
 import { useEffect, useState } from "react";
 import { BsInstagram } from "react-icons/bs";
@@ -24,7 +25,7 @@ const MOCK_USER_DATA = {
     avatarSrc: "",
 };
 
-const MOCK_USER_POST: Post[] = [{
+const MOCK_USER_POST: PostProps[] = [{
     author : {
         userId: '11111111-1111-1111-1111-111111111111', 
         lastName: 'Demo', 
@@ -44,30 +45,15 @@ const MOCK_USER_POST: Post[] = [{
 const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<Tab>("Thread");
     const [isFormOpen, setIsFormOpen] = useState(false);
-    // api save posts
-    const [posts, setPosts] = useState<Post[]>([]);
+    
+    const { posts } = usePosts(3,3)
 
     const userFromStore = useAppSelector((state) => state.auth.information)
-    
     const user = userFromStore || MOCK_USER_DATA;
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
     };
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const data = await getPost({page: 1, pageSize: 25})
-                console.log("Posts: ", data)
-                setPosts(data.data)
-            } catch (error) {
-                console.log("Post call error:", error)
-            }
-        }
-
-        fetchPosts()
-    },[])
 
     return (
         <ContentUILayout>
@@ -126,7 +112,7 @@ const ProfilePage = () => {
                                 <CreatePostForm />
                                 {posts && posts.length > 0 ? (
                                     posts.map((post) => (
-                                        <PostItem key={post.postId} {...post} />
+                                        <Post key={post.postId} {...post} />
                                     ))
                                 ) : (
                                     <div className="py-16 text-center">
