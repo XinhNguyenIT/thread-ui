@@ -9,7 +9,7 @@ namespace Backend.Models
 	{
 		public int CommentId { get; set; }
 		public required string Content { get; set; }
-		public int? ParentComment { get; set; }
+		public int? ParentCommentId { get; set; }
 
 		public required string UserId { get; set; }
 		public int LikeCount { get; set; } = 0;
@@ -21,6 +21,9 @@ namespace Backend.Models
 
 		public virtual User? User { get; set; }
 
-		public ICollection<Media> Medias { get; set; } = new List<Media>();
+		public virtual ICollection<Media> Medias { get; set; } = new List<Media>();
+		public virtual Comment ParentComment { get; set; }
+
+		public virtual ICollection<Comment> ChildComments { get; set; } = new List<Comment>();
 	}
 }

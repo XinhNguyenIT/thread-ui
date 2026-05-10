@@ -82,6 +82,11 @@ namespace Backend.Models
 						.HasForeignKey(c => c.UserId)
 						.OnDelete(DeleteBehavior.NoAction);
 
+				entity.HasMany(c => c.ChildComments)
+						.WithOne(cc => cc.ParentComment)
+						.HasForeignKey(c => c.ParentCommentId)
+						.OnDelete(DeleteBehavior.NoAction);
+
 				entity.ToTable(c => c.HasCheckConstraint("CK_Comments_LikeCount_Min", "[LikeCount] >= 0"));
 			});
 

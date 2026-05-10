@@ -9,7 +9,7 @@ namespace Backend.DTOs.Responses
 	public class PostResponse
 	{
 		public int PostId { get; set; }
-		public required UserCreatePostResponse Author { get; set; }
+		public required UserBasicResponse Author { get; set; }
 		public string? Caption { get; set; }
 		public PrivacySettingEnum PrivacySetting { get; set; }
 		public int LikesCount { get; set; } = 0;
