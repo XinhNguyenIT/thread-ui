@@ -29,7 +29,8 @@ namespace Backend.Mappers
 				Content = request.Caption,
 				PrivacySetting = request.PrivacySetting,
 				Medias = mediasInput,
-				IsAvatar = request.IsAvatar
+				IsAvatar = request.IsAvatar,
+				CreateAt = DateTime.UtcNow.AddHours(7)
 			};
 		}
 
