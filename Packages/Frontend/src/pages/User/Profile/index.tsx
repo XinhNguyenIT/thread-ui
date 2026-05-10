@@ -1,6 +1,7 @@
 import { getPost } from "@/api/post/fileService";
 import { GenderTypeEnum } from "@/common/genderTypeEnum";
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum";
+import AvatarUpload from "@/components/Avatar/AvatarUpload";
 import BaseButton from "@/components/Button/BaseButton";
 import ContentUILayout from "@/components/ContentUILayout";
 import CreatePostForm from "@/components/Forms/CreatePostForm";
@@ -46,13 +47,17 @@ const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<Tab>("Thread");
     const [isFormOpen, setIsFormOpen] = useState(false);
     
-    const { posts } = usePosts(3,3)
+    const { posts } = usePosts(1,13)
 
     const userFromStore = useAppSelector((state) => state.auth.information)
     const user = userFromStore || MOCK_USER_DATA;
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
+    };
+
+    const handleRefresh = () => {
+        window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
     };
 
     return (
@@ -66,9 +71,13 @@ const ProfilePage = () => {
                             <h3 className="text-2xl font-bold">{`${user.lastName} ${user.firstName}`}</h3>
                             <h5 className="text-[15px]">{textNormalize(user.lastName).toLowerCase()}.{textNormalize(user.firstName).toLowerCase()}</h5>
                         </div>
-                        <div className="size-24 rounded-full overflow-hidden">
-                            <Image src={user.avatarSrc} alt="avatar" /> {/*Trong Image có default data r nếu truyền rỗng*/}
-                        </div>
+                        {/* <div className="size-24 rounded-full overflow-hidden">
+                            <Image src={user.avatarSrc} alt="avatar" />
+                        </div> */}
+                        <AvatarUpload 
+                            currentSrc={user.avatarSrc} 
+                            onSuccess={handleRefresh} 
+                        />
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="text-gray-500">-- người theo dõi</p>

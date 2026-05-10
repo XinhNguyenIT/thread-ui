@@ -8,7 +8,7 @@ export const usePosts = (page: number, pageSize: number) => {
 
     const fetchPosts = async () => {
         try {
-            const data = await getPost({page: 1, pageSize: 20 });
+            const data = await getPost({page, pageSize });
             console.log("data posts:", data)
             setPosts(data.data);
         } catch (err) {

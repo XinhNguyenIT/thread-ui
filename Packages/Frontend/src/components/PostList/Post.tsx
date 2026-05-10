@@ -5,6 +5,7 @@ import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-reac
 import { GenderTypeEnum } from "@/common/genderTypeEnum"
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum"
 import { formatPostTime } from '@/utils/timeFormat';
+import LikeButton from './LikeButton';
 
 export interface PostProps {
     author?: {
@@ -26,6 +27,8 @@ export interface PostProps {
     }[]
     postId?: number
     privacySetting?: PrivacyTypeEnum
+    // test
+    isLiked?: boolean
 }
 
 const Post = ({
@@ -39,7 +42,9 @@ const Post = ({
     likesCount = 0,
     medias = [],
     postId,
-    privacySetting = PrivacyTypeEnum.PRIVATE
+    privacySetting = PrivacyTypeEnum.PRIVATE,
+    // test
+    isLiked = false
 }: PostProps) => {
     return (
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
@@ -93,9 +98,15 @@ const Post = ({
                     </div>
                 )}
 
-                {/* Hàng nút tương tác - Đã chỉnh icon đều nhau size 18 cho dễ nhìn */}
                 <div className="flex gap-4 mt-3 -ml-2">
-                    <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" />
+                    {postId && (
+                        <LikeButton
+                            postId={postId} 
+                            initialLikesCount={likesCount} 
+                            initialIsLiked={isLiked} 
+                        />
+                    )}
+                    {/* <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" /> */}
                     <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" />
                     <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
                     <ActionButton icon={<Send size={12} />} ariaLabel="Share" />

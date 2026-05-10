@@ -9,7 +9,7 @@ export interface UpdateUserRequest {
 }
 
 export interface UpdateAvatarRequest {
-    file: string; // Base64 string hoặc URL
+    file: File
     privacy: "PRIVATE" | "PUBLIC";
 }
 
