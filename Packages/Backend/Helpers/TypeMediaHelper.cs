@@ -25,5 +25,17 @@ namespace Backend.Helpers
 				_ => MediaTypeEnum.OTHER
 			};
 		}
+
+		public static string GetFileName(string finalName)
+		{
+			if (string.IsNullOrWhiteSpace(finalName))
+				return string.Empty;
+
+			// Tách chuỗi thành mảng dựa trên dấu '/'
+			var parts = finalName.Split('/');
+
+			// Lấy phần tử cuối cùng của mảng
+			return parts[^1];
+		}
 	}
 }
