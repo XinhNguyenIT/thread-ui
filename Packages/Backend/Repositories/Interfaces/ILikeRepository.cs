@@ -11,5 +11,6 @@ namespace Backend.Repositories.Interfaces
 	{
 		Task UserLikeTarget(string userId, int targetId, TargetTypeEnum targetType);
 		Task<Like?> GetLikeByUserIdAndTargetId(string userId, int targetId, TargetTypeEnum targetType);
+		Task<Dictionary<int, int>> GetTargetLikeCountsAsync(List<int> commentIds, TargetTypeEnum targetType);
 	}
 }

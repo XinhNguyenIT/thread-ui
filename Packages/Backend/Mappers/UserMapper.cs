@@ -80,9 +80,9 @@ namespace Backend.Mappers
 			};
 		}
 
-		public UserCreatePostResponse ToUserCreatePostResponse(User user, Media? avatar)
+		public UserBasicResponse ToUserBasicResponse(User user, Media? avatar)
 		{
-			return new UserCreatePostResponse
+			return new UserBasicResponse
 			{
 				UserId = user.Id,
 				FirstName = user.FirstName,

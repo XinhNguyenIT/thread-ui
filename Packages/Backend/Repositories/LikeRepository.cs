@@ -38,6 +38,21 @@ namespace Backend.Repositories
 			throw new NotImplementedException();
 		}
 
+		public async Task<Dictionary<int, int>> GetTargetLikeCountsAsync(List<int> commentIds, TargetTypeEnum targetType)
+		{
+			return await _context.Likes
+						.Where(l =>
+							l.TargetType == targetType &&
+							commentIds.Contains(l.TargetId))
+						.GroupBy(l => l.TargetId)
+						.Select(g => new
+						{
+							CommentId = g.Key,
+							Count = g.Count()
+						})
+						.ToDictionaryAsync(x => x.CommentId, x => x.Count);
+		}
+
 		public async Task<Like?> GetLikeByUserIdAndTargetId(string userId, int targetId, TargetTypeEnum targetType)
 		{
 			return await _context.Likes

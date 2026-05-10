@@ -73,7 +73,7 @@ namespace Backend.Repositories
 				.Select(p => new PostResponse
 				{
 					PostId = p.PostId,
-					Author = new UserCreatePostResponse
+					Author = new UserBasicResponse
 					{
 						UserId = p.UserId,
 						LastName = p.Author.LastName,

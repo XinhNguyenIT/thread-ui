@@ -49,7 +49,7 @@ namespace Backend.Mappers
 			var medias = post.Medias.Select(m => _mediaMapper.ToMediaResponse(m)).ToList();
 			return new PostResponse
 			{
-				Author = _userMapper.ToUserCreatePostResponse(user, avatar),
+				Author = _userMapper.ToUserBasicResponse(user, avatar),
 				Caption = post.Content,
 				CreateAt = post.CreateAt,
 				Medias = medias,

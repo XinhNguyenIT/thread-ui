@@ -7,7 +7,7 @@ namespace Backend.DTOs.Responses
 {
 	public class CreatePostResponse
 	{
-		public required UserCreatePostResponse Author { get; set; }
+		public required UserBasicResponse Author { get; set; }
 		public string? Caption { get; set; }
 		public int LikesCount { get; set; }
 		public int CommentsCount { get; set; }
