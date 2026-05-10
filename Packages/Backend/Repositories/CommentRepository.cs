@@ -61,27 +61,6 @@ namespace Backend.Repositories
 							.ThenInclude(u => u.Posts.Where(p => p.IsAvatar))
 								.ThenInclude(p => p.Medias)
 							.ToListAsync();
-
-			// .Select(c => new CommentResponse
-			// {
-			// 	User = new UserBasicResponse
-			// 	{
-			// 		UserId = c.UserId,
-			// 		FirstName = c.User.FirstName,
-			// 		LastName = c.User.LastName,
-			// 		Gender = c.User.Gender,
-			// 		Avatar = c.User.Posts
-			// 			.Where(p => p.IsAvatar)
-			// 			.SelectMany(p => p.Medias)
-			// 			.Select(m => new MediaResponse
-			// 			{
-			// 				Src = m.Status == MediaStatusEnum.DONE ? m.ProcessedSrc : m.Src,
-			// 				Type = 
-			// 			})
-			// 			.FirstOrDefault()
-			// 							}
-			// 						})
-			// .ToListAsync();
 		}
 
 		public Task Update(Comment entity)

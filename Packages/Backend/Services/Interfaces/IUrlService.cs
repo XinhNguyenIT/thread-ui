@@ -5,5 +5,6 @@ namespace Backend.Services.Interfaces;
 
 public interface IUrlService
 {
-	string GetFullUrl(Media media, GenderTypeEnum gender = GenderTypeEnum.UNKNOWN);
+	string GetFullUrlForAvatar(Media media, GenderTypeEnum gender = GenderTypeEnum.UNKNOWN);
+	string GetFullUrlDefault(Media media);
 }
