@@ -19,9 +19,9 @@ namespace Backend.Repositories
 			_context = context;
 		}
 
-		public Task AddAsync(Comment entity)
+		public async Task AddAsync(Comment entity)
 		{
-			throw new NotImplementedException();
+			await _context.AddAsync(entity);
 		}
 
 		public void Delete(Comment entity)

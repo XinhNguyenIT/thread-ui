@@ -54,7 +54,7 @@ namespace Backend.Services
 
 			var media = new Media
 			{
-				Src = request.File,
+				Src = TypeMediaHelper.GetFileName(request.File),
 				Type = TypeMediaHelper.Get(request.File)
 			};
 
