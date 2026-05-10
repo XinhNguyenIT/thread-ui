@@ -8,6 +8,7 @@ const routes = {
     search: '/search',
     activity: '/activity',
     profile: '/profile',
+    testing: '/testing',
     postDetail: '/post/:id', // Thêm route cho chi tiết bài viết
 };
 

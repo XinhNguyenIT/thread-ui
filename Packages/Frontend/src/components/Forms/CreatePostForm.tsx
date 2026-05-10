@@ -82,65 +82,74 @@ const CreatePostForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-4 rounded-xl border border-zinc-200 mb-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-4 rounded-xl border border-zinc-200">
             {/* Caption */}
             <textarea
                 {...register('Caption', { required: 'Vui lòng nhập nội dung' })}
                 placeholder="What's on your mind?"
-                className="w-full p-3 border-none outline-none resize-none text-[18px]"
+                className="w-full p-3 border-none outline-none resize-none text-[15px]"
                 rows={3}
             />
 
             {/* Privacy & IsAvatar Row */}
-            <div className="flex gap-4 mb-4 items-center">
-                <select {...register('PrivacySetting')} className="p-2 border rounded-lg bg-gray-50 outline-none">
-                    <option value={PrivacyTypeEnum.PUBLIC}>Public</option>
-                    <option value={PrivacyTypeEnum.FRIEND}>Friends</option>
-                    <option value={PrivacyTypeEnum.PRIVATE}>Private</option>
-                </select>
-            </div>
+            <div className='flex justify-between items-center'>
 
-            {/* File Upload Section */}
-            <div className="mb-4">
-                <label className="inline-block p-2 bg-blue-50 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-100">
-                    <input
-                        type="file"
-                        multiple
-                        className="hidden"
-                        onChange={handleFileChange}
-                        accept="image/*,video/*"
-                    />
-                    {isUploading ? <Spinner size="sm" /> : '📁 Add Photos/Videos'}
-                </label>
+                {/* Option upload */}
+                <div className='flex gap-2'>
+                    <div className="flex gap-4 items-center">
+                        <select {...register('PrivacySetting')} className="p-2 border rounded-lg bg-gray-50 outline-none text-[12px]">
+                            <option value={PrivacyTypeEnum.PUBLIC}>Public</option>
+                            <option value={PrivacyTypeEnum.FRIEND}>Friends</option>
+                            <option value={PrivacyTypeEnum.PRIVATE}>Private</option>
+                        </select>
+                    </div>
 
-                {/* Preview Files */}
-                <div className="flex flex-wrap gap-2 mt-2">
-                    {files.map((url, index) => (
-                        <div key={index} className="relative w-20 h-20">
-                            <img src={url} className="w-full h-full object-cover rounded-lg" />
-                            <button
-                                type="button"
-                                onClick={async () => {
-                                    var response = await deleteFiles(url);
-                                    if (response.success) {
-                                        setValue(
-                                            'Files',
-                                            files.filter((_, i) => i !== index),
-                                        );
-                                    }
-                                }}
-                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs"
-                            >
-                                ×
-                            </button>
-                        </div>
-                    ))}
+                    {/* File Upload Section */}
+                    <div className="">
+                        <label className="inline-block p-2 bg-blue-50 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-100 text-[12px]">
+                            <input
+                                type="file"
+                                multiple
+                                className="hidden"
+                                onChange={handleFileChange}
+                                accept="image/*,video/*"
+                            />
+                            {isUploading ? <Spinner size="sm" /> : '📁 Add Photos/Videos'}
+                        </label>
+
+                    </div>
                 </div>
+                
+                <Button type="submit" className=" py-2 bg-blue-500 text-white rounded-full font-bold">
+                    Post
+                </Button>
             </div>
+            
 
-            <Button type="submit" className="w-full py-2 bg-blue-500 text-white rounded-full font-bold">
-                Post
-            </Button>
+            {/* Preview Files - Đi chung với file upload section*/}
+            <div className="flex flex-wrap gap-2">
+                {files.map((url, index) => (
+                    <div key={index} className="relative w-20 h-20 mt-2">
+                        <img src={url} className="w-full h-full object-cover rounded-lg" />
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                var response = await deleteFiles(url);
+                                if (response.success) {
+                                    setValue(
+                                        'Files',
+                                        files.filter((_, i) => i !== index),
+                                    );
+                                }
+                            }}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs"
+                        >
+                            ×
+                        </button>
+                    </div>
+                ))}
+            </div>
+            
         </form>
     );
 };

@@ -65,14 +65,21 @@ const StatusSlice = createSlice({
             .addCase(authActions.getCurrentUser.fulfilled, (state, action) => {
                 const response = action.payload;
 
-                ((state.isSuccess = true),
-                    (state.isError = false),
-                    (state.isLoading = false),
-                    (state.message = response.message));
+                state.isSuccess = true;
+                state.isError = false;
+                state.isLoading = false;
+                state.message = response.message;
             })
             .addCase(authActions.getCurrentUser.pending, (state) => {
                 ((state.isSuccess = false), (state.isError = false), (state.isLoading = true), (state.message = ''));
-            }),
+            })
+            .addCase(authActions.logout.rejected, (state, action : any) => {
+                var payload = action.payload
+                state.isSuccess = false,
+                state.isLoading = false,
+                state.isError = true,
+                state.message = payload.message
+            })
 });
 
 export default StatusSlice.reducer;
