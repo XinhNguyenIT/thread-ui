@@ -13,7 +13,7 @@ const LikeButton = ({ postId, initialLikesCount, initialIsLiked }: LikeButtonPro
     const [isLiked, setIsLiked] = useState(initialIsLiked);
     const [count, setCount] = useState(initialLikesCount);
     const [isLoading, setIsLoading] = useState(false);
-    console.log("post id",postId)
+    // console.log("post id",postId)
 
     const handleLike = async () => {
         if (isLoading) return; // Tránh spam click
