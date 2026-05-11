@@ -29,7 +29,7 @@ namespace Backend.Repositories
 
 		public void Delete(Post entity)
 		{
-			throw new NotImplementedException();
+			_context.Posts.Remove(entity);
 		}
 
 		public async Task DisableAllAvatarsAsync(string userId)
