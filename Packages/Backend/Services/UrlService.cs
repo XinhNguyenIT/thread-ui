@@ -14,7 +14,7 @@ public class UrlService : IUrlService
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public string GetFullUrlDefault(Media media)
+	public string GetFullUrlDefault(Media media, bool isTemp = false)
 	{
 		var request = _httpContextAccessor.HttpContext?.Request;
 		if (request == null) return media.Src;
@@ -27,7 +27,7 @@ public class UrlService : IUrlService
 		var mediaIsDone = media.Status == MediaStatusEnum.DONE;
 		fileName = media.Src;
 
-		subFolderName = mediaIsDone ? "posts" : "temps";
+		subFolderName = isTemp ? "temps" : "posts";
 
 		if (mediaIsDone && !string.IsNullOrEmpty(media.ProcessedSrc))
 		{
@@ -65,7 +65,7 @@ public class UrlService : IUrlService
 			var mediaIsDone = media.Status == MediaStatusEnum.DONE;
 			fileName = media.Src;
 
-			subFolderName = mediaIsDone ? "posts" : "temps";
+			subFolderName = "posts";
 
 			if (mediaIsDone && !string.IsNullOrEmpty(media.ProcessedSrc))
 			{
