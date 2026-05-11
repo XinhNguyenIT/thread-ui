@@ -26,8 +26,6 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ currentSrc, onSuccess }) =>
         try {
             setIsUploading(true);
 
-            // BƯỚC 1: Upload file lên server để lấy URL
-            // Kết quả trả về có dạng: { success: true, data: "http://.../image.jpg", ... }
             const uploadRes = await uploadFiles(file);
             console.log("up pic:", uploadRes)
 
@@ -36,10 +34,12 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ currentSrc, onSuccess }) =>
                 console.log(imageUrl)
 
                 // BƯỚC 2: Lấy URL từ bước 1 để cập nhật Profile User
-                await updateAvatar({
-                    file: imageUrl, // Lúc này 'file' là một URL string sạch sẽ
+                const updateAvatarRes = await updateAvatar({
+                    file: imageUrl, 
                     privacy: "PUBLIC"
                 });
+
+                console.log("ket qua luu", updateAvatarRes)
 
                 alert("Cập nhật ảnh đại diện thành công!");
                 if (onSuccess) onSuccess();
@@ -61,7 +61,6 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ currentSrc, onSuccess }) =>
                 ${isUploading ? 'pointer-events-none opacity-80' : ''}`}
             onClick={() => !isUploading && fileInputRef.current?.click()}
         >
-            {/* Ảnh đại diện hiện tại */}
             <Image src={currentSrc} alt="avatar" className="w-full h-full object-cover transition group-hover:opacity-50" />
 
             {/* Lớp phủ khi hover hoặc đang loading */}
@@ -76,7 +75,6 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ currentSrc, onSuccess }) =>
                 </div>
             </div>
 
-            {/* Input file ẩn */}
             <input 
                 type="file" 
                 ref={fileInputRef} 

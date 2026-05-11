@@ -106,10 +106,9 @@ const Post = ({
                             initialIsLiked={isLiked} 
                         />
                     )}
-                    {/* <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" /> */}
                     <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" />
-                    <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
-                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" />
+                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
+                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
                 </div>
             </div>
         </div>

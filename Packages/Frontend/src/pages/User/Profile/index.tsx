@@ -48,12 +48,14 @@ const ProfilePage = () => {
     const userFromStore = useAppSelector((state) => state.auth.information)
     const user = userFromStore || MOCK_USER_DATA;
 
+    console.log("user data: ", user)
+
     const handleCloseForm = () => {
         setIsFormOpen(false);
     };
 
     const handleRefresh = () => {
-        window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
+        // window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
     };
 
     return (
