@@ -61,7 +61,7 @@ namespace Backend.Services
 
 		public async Task<AuthInternal> ByRefreshToken(string refreshToken)
 		{
-			var currentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken) ?? throw new BadHttpRequestException("User not found");
+			var currentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken) ?? throw new BadHttpRequestException("Invalid refresh token");
 
 			var roles = await _unitOfWork.RoleRepository.GetByUserAsync(currentUser);
 
@@ -109,6 +109,22 @@ namespace Backend.Services
 			{
 				await _unitOfWork.RollbackAsync();
 				throw;
+			}
+		}
+
+		public async Task Logout()
+		{
+			var userId = _userContext.UserId;
+
+			var tokens = await _unitOfWork.RefreshTokenRepository.FindByUserId(userId);
+			if (tokens != null)
+			{
+				foreach (var token in tokens)
+				{
+					await _unitOfWork.RefreshTokenRepository.RevokeToken(token.Id);
+				}
+
+				await _unitOfWork.CommitAsync();
 			}
 		}
 	}

@@ -19,6 +19,7 @@ public static class CookieHelper
 
     public static void ClearCookie(HttpResponse response)
     {
-        response.Cookies.Delete("accessToken");
+        response.Cookies.Delete("access");
+        response.Cookies.Delete("refresh");
     }
 }

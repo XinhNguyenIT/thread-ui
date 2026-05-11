@@ -29,7 +29,8 @@ namespace Backend.Mappers
 				Content = request.Caption,
 				PrivacySetting = request.PrivacySetting,
 				Medias = mediasInput,
-				IsAvatar = request.IsAvatar
+				IsAvatar = request.IsAvatar,
+				CreateAt = DateTime.UtcNow.AddHours(7)
 			};
 		}
 
@@ -44,12 +45,26 @@ namespace Backend.Mappers
 			};
 		}
 
+		public PostResponse ToPostResponse(Post post)
+		{
+			var medias = post.Medias.Select(m => _mediaMapper.ToMediaResponse(m)).ToList();
+			return new PostResponse
+			{
+				Author = _userMapper.ToUserBasicResponse(post.Author, post.Author.Posts.FirstOrDefault(p => p.IsAvatar)?.Medias.FirstOrDefault()),
+				Caption = post.Content,
+				CreateAt = post.CreateAt,
+				Medias = medias,
+				PostId = post.PostId,
+				PrivacySetting = post.PrivacySetting
+			};
+		}
+
 		public PostResponse ToPostResponse(Post post, User user, Media? avatar)
 		{
 			var medias = post.Medias.Select(m => _mediaMapper.ToMediaResponse(m)).ToList();
 			return new PostResponse
 			{
-				Author = _userMapper.ToUserCreatePostResponse(user, avatar),
+				Author = _userMapper.ToUserBasicResponse(user, avatar),
 				Caption = post.Content,
 				CreateAt = post.CreateAt,
 				Medias = medias,

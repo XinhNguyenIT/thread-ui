@@ -66,7 +66,7 @@ namespace Backend.Mappers
 				FirstName = user.FirstName,
 				LastName = user.LastName,
 				Gender = user.Gender,
-				AvatarSrc = _urlService.GetFullUrl(user.AvatarSrc, user.Gender)
+				AvatarSrc = _urlService.GetFullUrlForAvatar(user.AvatarSrc, user.Gender)
 			};
 		}
 
@@ -80,15 +80,15 @@ namespace Backend.Mappers
 			};
 		}
 
-		public UserCreatePostResponse ToUserCreatePostResponse(User user, Media? avatar)
+		public UserBasicResponse ToUserBasicResponse(User user, Media? avatar)
 		{
-			return new UserCreatePostResponse
+			return new UserBasicResponse
 			{
 				UserId = user.Id,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
 				Gender = user.Gender,
-				Avatar = avatar != null ? _mediaMapper.ToMediaResponse(avatar) : null
+				Avatar = avatar != null ? _mediaMapper.ToMediaResponse(avatar, user.Gender) : null
 			};
 		}
 	}
