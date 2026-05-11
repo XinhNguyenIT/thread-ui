@@ -30,5 +30,13 @@ namespace Backend.Controllers
 
             return Ok(ApiResponse<List<CommentResponse>>.SuccessResponse(response, "Get comments successfully"));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync([FromBody] CreateCommentRequest request)
+        {
+            var response = await _commentService.CreateCommentAsync(request);
+
+            return Ok(ApiResponse<CommentResponse>.SuccessResponse(response, "Create comment successfully"));
+        }
     }
 }
