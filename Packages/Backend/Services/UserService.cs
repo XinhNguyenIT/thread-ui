@@ -51,10 +51,11 @@ namespace Backend.Services
 				throw new BadHttpRequestException("Avatar must be image!");
 
 			var userId = _userContext.UserId;
+			var fileName = TypeMediaHelper.GetFileName(request.File);
 
 			var media = new Media
 			{
-				Src = TypeMediaHelper.GetFileName(request.File),
+				Src = fileName,
 				Type = TypeMediaHelper.Get(request.File)
 			};
 
@@ -64,7 +65,7 @@ namespace Backend.Services
 
 			try
 			{
-				finalName = await _fileService.MoveToPermanentAsync(request.File);
+				finalName = await _fileService.MoveToPermanentAsync(fileName);
 
 				var newPost = _postMapper.ToModel(request, userId, media);
 				await _unitOfWork.PostRepository.DisableAllAvatarsAsync(userId);
