@@ -44,6 +44,11 @@ namespace Backend.Repositories
 			return await _context.Medias.FindAsync(id);
 		}
 
+		public async Task<List<Media>> GetByPostId(int postId)
+		{
+			return await _context.Medias.Where(m => m.PostId == postId).ToListAsync();
+		}
+
 		public Task Update(Media entity)
 		{
 			throw new NotImplementedException();

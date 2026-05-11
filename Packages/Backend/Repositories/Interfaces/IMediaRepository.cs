@@ -9,5 +9,6 @@ namespace Backend.Repositories.Interfaces
 	public interface IMediaRepository : IGenericRepository<Media>
 	{
 		Task<Media> GetAvtSrcByUserId(string userId);
+		Task<List<Media>> GetByPostId(int postId);
 	}
 }
