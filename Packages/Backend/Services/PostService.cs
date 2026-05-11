@@ -2,6 +2,7 @@ using Backend.Background.Queue;
 using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
+using Backend.Enums;
 using Backend.Helpers;
 using Backend.Mappers;
 using Backend.Models;
@@ -83,7 +84,13 @@ namespace Backend.Services
 
 			if (posts.Count == 0) return new List<PostResponse>();
 
-			var response = posts.Select(p => _postMapper.ToPostResponse(p)).ToList();
+			var postIds = posts.Select(p => p.PostId);
+
+			var userLikes = await _unitOfWork.LikeRepository.GetLikeByUserIdAndTargetIds(userId, postIds, TargetTypeEnum.POST);
+
+			var LikedPost = userLikes.Select(l => l.TargetId).ToList();
+
+			var response = posts.Select(p => _postMapper.ToPostResponse(p, LikedPost)).ToList();
 
 			return response;
 		}

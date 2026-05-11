@@ -45,7 +45,7 @@ namespace Backend.Mappers
 			};
 		}
 
-		public PostResponse ToPostResponse(Post post)
+		public PostResponse ToPostResponse(Post post, IEnumerable<int> userLike)
 		{
 			var medias = post.Medias.Select(m => _mediaMapper.ToMediaResponse(m)).ToList();
 			return new PostResponse
@@ -53,6 +53,9 @@ namespace Backend.Mappers
 				Author = _userMapper.ToUserBasicResponse(post.Author, post.Author.Posts.FirstOrDefault(p => p.IsAvatar)?.Medias.FirstOrDefault()),
 				Caption = post.Content,
 				CreateAt = post.CreateAt,
+				LikesCount = post.LikeCount,
+				CommentsCount = post.Comments.Count(),
+				IsLiked = userLike.Contains(post.PostId),
 				Medias = medias,
 				PostId = post.PostId,
 				PrivacySetting = post.PrivacySetting
