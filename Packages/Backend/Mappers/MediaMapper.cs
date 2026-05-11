@@ -39,5 +39,15 @@ namespace Backend.Mappers
 						: _urlService.GetFullUrlDefault(media)
 			};
 		}
+
+		public UpdateAvatarResponse ToAvatarResponse(Media media, GenderTypeEnum? gender = null)
+		{
+			return new UpdateAvatarResponse
+			{
+				AvatarSrc = gender != null
+						? _urlService.GetFullUrlForAvatar(media, gender.Value)
+						: _urlService.GetFullUrlDefault(media)
+			};
+		}
 	}
 }

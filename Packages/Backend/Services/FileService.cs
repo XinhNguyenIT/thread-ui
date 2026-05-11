@@ -30,10 +30,6 @@ namespace Backend.Services
 
 		public async Task<string> SaveTempAsync(IFormFile file)
 		{
-			var userId = _userContext.UserId;
-
-			var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-
 			Directory.CreateDirectory(_tempPath);
 
 			var ext = Path.GetExtension(file.FileName);
@@ -50,7 +46,8 @@ namespace Backend.Services
 				Src = fileName,
 			};
 
-			return _urlMapper.GetFullUrlForAvatar(newMedia, user.Gender);
+			var isTemp = true;
+			return _urlMapper.GetFullUrlDefault(newMedia, isTemp);
 		}
 
 		public Task<string> MoveToPermanentAsync(string tempFileName)

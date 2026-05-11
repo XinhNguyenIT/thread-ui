@@ -18,6 +18,7 @@ public class MediaProcessor : IMediaProcessor
 		var name = Path.GetFileNameWithoutExtension(media.Src);
 
 		if (!File.Exists(input)) return;
+
 		try
 		{
 			if (media.Type == MediaTypeEnum.IMAGE)
@@ -40,6 +41,8 @@ public class MediaProcessor : IMediaProcessor
 			}
 
 			media.Status = MediaStatusEnum.DONE;
+
+			File.Delete(input);
 		}
 		catch (Exception)
 		{
