@@ -81,6 +81,10 @@ namespace Backend.Services
 		{
 			var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PostId);
 			if (post == null) throw new BadHttpRequestException("Cannot find post by Id");
+
+			var medias = await _unitOfWork.MediaRepository.GetByPostId(request.PostId);
+			post.Medias = medias;
+
 			_unitOfWork.PostRepository.Delete(post);
 			await _unitOfWork.SaveChangesAsync();
 		}
