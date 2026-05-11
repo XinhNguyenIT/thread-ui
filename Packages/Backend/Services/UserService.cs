@@ -20,11 +20,12 @@ namespace Backend.Services
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly PostMapper _postMapper;
 		private readonly UserMapper _userMapper;
+		private readonly MediaMapper _mediaMapper;
 		private readonly UserContext _userContext;
 		private readonly IFileService _fileService;
 		private readonly IMediaQueue _mediaQueue;
 
-		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService, UserMapper userMapper, IMediaQueue mediaQueue)
+		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService, UserMapper userMapper, IMediaQueue mediaQueue, MediaMapper mediaMapper)
 		{
 			_unitOfWork = unitOfWork;
 			_postMapper = postMapper;
@@ -32,6 +33,7 @@ namespace Backend.Services
 			_fileService = fileService;
 			_userMapper = userMapper;
 			_mediaQueue = mediaQueue;
+			_mediaMapper = mediaMapper;
 		}
 
 		public async Task<UpdateUserResponse> Update(UpdateUserRequest request)
@@ -47,7 +49,7 @@ namespace Backend.Services
 			return response;
 		}
 
-		public async Task<PostResponse> UpdateAvatar(UpdateAvatarRequest request)
+		public async Task<UpdateAvatarResponse> UpdateAvatar(UpdateAvatarRequest request)
 		{
 			var typeMedia = TypeMediaHelper.Get(request.File);
 			if (typeMedia != MediaTypeEnum.IMAGE)
@@ -82,7 +84,7 @@ namespace Backend.Services
 
 				var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 				var avatar = await _unitOfWork.MediaRepository.GetAvtSrcByUserId(userId);
-				var response = _postMapper.ToPostResponse(newPost, user, avatar);
+				var response = _mediaMapper.ToAvatarResponse(media, user.Gender);
 
 				return response;
 			}
