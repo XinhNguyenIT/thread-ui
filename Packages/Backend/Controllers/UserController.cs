@@ -28,7 +28,7 @@ namespace Backend.Controllers
         {
             var response = await _userService.UpdateAvatar(request);
 
-            return Ok(ApiResponse<PostResponse>.SuccessResponse(response, "Avatar updated successfully"));
+            return Ok(ApiResponse<UpdateAvatarResponse>.SuccessResponse(response, "Avatar updated successfully"));
         }
 
         [HttpPut]
