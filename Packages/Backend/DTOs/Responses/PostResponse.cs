@@ -14,6 +14,7 @@ namespace Backend.DTOs.Responses
 		public PrivacySettingEnum PrivacySetting { get; set; }
 		public int LikesCount { get; set; } = 0;
 		public int CommentsCount { get; set; } = 0;
+		public bool? IsLiked { get; set; } = null;
 		public bool IsAvatar { get; set; }
 		public DateTime CreateAt { get; set; }
 		public List<MediaResponse> Medias { get; set; } = new List<MediaResponse>();
