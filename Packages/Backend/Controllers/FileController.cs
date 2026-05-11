@@ -15,7 +15,6 @@ namespace Backend.Controllers
     public class FileController : ControllerBase
     {
         private readonly IFileService _fileService;
-        private readonly IMediaService _mediaService;
 
         public FileController(IFileService fileService)
         {

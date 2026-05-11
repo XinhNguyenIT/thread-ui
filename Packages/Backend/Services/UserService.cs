@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Background.Queue;
 using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
@@ -21,14 +22,16 @@ namespace Backend.Services
 		private readonly UserMapper _userMapper;
 		private readonly UserContext _userContext;
 		private readonly IFileService _fileService;
+		private readonly IMediaQueue _mediaQueue;
 
-		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService, UserMapper userMapper)
+		public UserService(IUnitOfWork unitOfWork, PostMapper postMapper, UserContext userContext, IFileService fileService, UserMapper userMapper, IMediaQueue mediaQueue)
 		{
 			_unitOfWork = unitOfWork;
 			_postMapper = postMapper;
 			_userContext = userContext;
 			_fileService = fileService;
 			_userMapper = userMapper;
+			_mediaQueue = mediaQueue;
 		}
 
 		public async Task<UpdateUserResponse> Update(UpdateUserRequest request)
@@ -67,11 +70,15 @@ namespace Backend.Services
 			{
 				finalName = await _fileService.MoveToPermanentAsync(fileName);
 
+				media.Src = finalName;
+
 				var newPost = _postMapper.ToModel(request, userId, media);
 				await _unitOfWork.PostRepository.DisableAllAvatarsAsync(userId);
 
 				await _unitOfWork.PostRepository.AddAsync(newPost);
 				await _unitOfWork.CommitAsync();
+
+				_mediaQueue.Enqueue(media.MediaId);
 
 				var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 				var avatar = await _unitOfWork.MediaRepository.GetAvtSrcByUserId(userId);
