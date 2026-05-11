@@ -63,6 +63,7 @@ const CreatePostForm = () => {
     };
 
     const onSubmit = async (data: CreatePostInput) => {
+
         const payload = {
             Caption: data.Caption,
             PrivacySetting: data.PrivacySetting,
@@ -71,7 +72,7 @@ const CreatePostForm = () => {
                 return url.split('/').pop()!;
             }),
         };
-
+            
         var response = await postNewFeed(payload);
 
         if (response.success) {

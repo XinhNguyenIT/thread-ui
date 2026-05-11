@@ -6,6 +6,8 @@ import { GenderTypeEnum } from "@/common/genderTypeEnum"
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum"
 import { formatPostTime } from '@/utils/timeFormat';
 import LikeButton from './LikeButton';
+import { useState } from 'react';
+import CommentSection from './CommentSection';
 
 export interface PostProps {
     author?: {
@@ -46,6 +48,9 @@ const Post = ({
     // test
     isLiked = false
 }: PostProps) => {
+
+    const [showComments, setShowComments] = useState(false);
+    
     return (
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
             {/* Cột trái: Avatar */}
@@ -106,11 +111,21 @@ const Post = ({
                             initialIsLiked={isLiked} 
                         />
                     )}
-                    {/* <ActionButton icon={<Heart size={12} />} count={likesCount} ariaLabel="Like" /> */}
-                    <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" />
-                    <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
-                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" />
+                    {/* <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" /> */}
+                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
+                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
+
+                    <ActionButton 
+                        icon={<MessageCircle size={12} />} 
+                        count={commentsCount} 
+                        ariaLabel="Reply" 
+                        onClick={() => setShowComments(!showComments)} // Thêm cái này
+                    />
                 </div>
+
+                {showComments && postId && (
+                    <CommentSection postId={postId} />
+                )}
             </div>
         </div>
     );

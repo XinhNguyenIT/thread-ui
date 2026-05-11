@@ -13,7 +13,7 @@ const LikeButton = ({ postId, initialLikesCount, initialIsLiked }: LikeButtonPro
     const [isLiked, setIsLiked] = useState(initialIsLiked);
     const [count, setCount] = useState(initialLikesCount);
     const [isLoading, setIsLoading] = useState(false);
-    console.log("post id",postId)
+    
 
     const handleLike = async () => {
         if (isLoading) return; // Tránh spam click
@@ -24,14 +24,13 @@ const LikeButton = ({ postId, initialLikesCount, initialIsLiked }: LikeButtonPro
         setCount(prev => prevLiked ? prev - 1 : prev + 1);
         setIsLoading(true);
 
-        //Dung roi no co vay thoi them enum targetType laf POST,STORY,COMMENT roi moi cai quang no cai action vao la dc
-        // oke quen cai nay, de t thu lai cai
+        console.log("post id: ",postId)
         try {
-            await interactLikeAction({
+            const like = await interactLikeAction({
                 targetId: postId,
                 targetType: "POST"
             });
-            // Nếu API thành công, không cần làm gì thêm vì UI đã update ở trên
+            console.log("like ? :", like)
         } catch (error) {
             // Nếu lỗi, hoàn tác (rollback) trạng thái giao diện
             setIsLiked(prevLiked);

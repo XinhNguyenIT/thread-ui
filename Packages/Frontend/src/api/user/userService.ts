@@ -9,7 +9,7 @@ export interface UpdateUserRequest {
 }
 
 export interface UpdateAvatarRequest {
-    file: File
+    file: string
     privacy: "PRIVATE" | "PUBLIC";
 }
 

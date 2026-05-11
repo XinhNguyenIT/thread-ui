@@ -2,21 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Home, Search, Plus, Heart, User, Menu, Settings, Moon, LogOut, MessageSquareWarning } from 'lucide-react';
 import ActionButton from '@/components/Button/ActionButton';
 import Image from '@/components/Image';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { logout } from '@/redux/slices/authSlice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { authActions } from '@/redux/actions/authActions';
 
 export default function Sidebar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
-    const handleLogout = () => {
-        // dispatch(logout());
-        // localStorage.removeItem('accessToken'); 
-        // navigate('/login');
+    const handleLogout = async () => {
+        await dispatch(authActions.logout());
     };
 
     // Xử lý đóng menu khi click ra ngoài vùng menu

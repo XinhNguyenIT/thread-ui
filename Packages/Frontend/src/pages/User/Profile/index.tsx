@@ -1,4 +1,3 @@
-import { getPost } from "@/api/post/fileService";
 import { GenderTypeEnum } from "@/common/genderTypeEnum";
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum";
 import AvatarUpload from "@/components/Avatar/AvatarUpload";
@@ -6,12 +5,11 @@ import BaseButton from "@/components/Button/BaseButton";
 import ContentUILayout from "@/components/ContentUILayout";
 import CreatePostForm from "@/components/Forms/CreatePostForm";
 import UpdateProfileForm from "@/components/Forms/UpdateProfileForm";
-import Image from "@/components/Image";
-import Post, { PostProps } from "@/components/PostList/Post";
+import { PostProps } from "@/components/PostList/Post";
+import Posts from "@/components/PostList/Posts";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { usePosts } from "@/hooks/usePost";
 import { textNormalize } from "@/utils/textNormalize";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsInstagram } from "react-icons/bs";
 
 const tabs = ["Thread", "Câu trả lời", "File phương tiện", "Bài đăng lại"];
@@ -47,17 +45,17 @@ const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<Tab>("Thread");
     const [isFormOpen, setIsFormOpen] = useState(false);
     
-    const { posts } = usePosts(1,13)
-
     const userFromStore = useAppSelector((state) => state.auth.information)
     const user = userFromStore || MOCK_USER_DATA;
+
+    console.log("user data: ", user)
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
     };
 
     const handleRefresh = () => {
-        window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
+        // window.location.reload(); // Hoặc gọi hàm fetch lại data từ Redux - need to find out
     };
 
     return (
@@ -71,9 +69,7 @@ const ProfilePage = () => {
                             <h3 className="text-2xl font-bold">{`${user.lastName} ${user.firstName}`}</h3>
                             <h5 className="text-[15px]">{textNormalize(user.lastName).toLowerCase()}.{textNormalize(user.firstName).toLowerCase()}</h5>
                         </div>
-                        {/* <div className="size-24 rounded-full overflow-hidden">
-                            <Image src={user.avatarSrc} alt="avatar" />
-                        </div> */}
+                        
                         <AvatarUpload 
                             currentSrc={user.avatarSrc} 
                             onSuccess={handleRefresh} 
@@ -119,15 +115,9 @@ const ProfilePage = () => {
                         {activeTab === "Thread" && (
                             <div className="py-4">
                                 <CreatePostForm />
-                                {posts && posts.length > 0 ? (
-                                    posts.map((post) => (
-                                        <Post key={post.postId} {...post} />
-                                    ))
-                                ) : (
-                                    <div className="py-16 text-center">
-                                        <p className="m-auto">Chưa có thread nào</p>
-                                    </div>
-                                )}
+                                
+                                {/* Gọi danh sách post, mặc định load 5 bài */}
+                                <Posts pageSize={5} />
                             </div>
                         )}
 
