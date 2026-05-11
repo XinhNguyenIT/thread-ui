@@ -12,3 +12,8 @@ export const getPost = async (request: GetPageRequest) => {
     const response = await axiosInstance.get(`${POST_API.GET_POST}?Page=${request.page}&PageSize=${request.pageSize}`)
     return response.data 
 }
+
+export const deletePost = async (request: number) => {
+    const response = await axiosInstance.delete(`${POST_API.DELETE_POST}?PostId=${request}`);
+    return response.data;
+}
