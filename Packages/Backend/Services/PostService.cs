@@ -77,6 +77,14 @@ namespace Backend.Services
 			return response;
 		}
 
+		public async Task DeletePost(DeletePostRequest request)
+		{
+			var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PostId);
+			if (post == null) throw new BadHttpRequestException("Cannot find post by Id");
+			_unitOfWork.PostRepository.Delete(post);
+			await _unitOfWork.SaveChangesAsync();
+		}
+
 		public async Task<List<PostResponse>> GetPagedPosts(int page = 1, int pageSize = 10)
 		{
 			var userId = _userContext.UserId;
