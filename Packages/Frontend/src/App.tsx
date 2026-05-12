@@ -10,7 +10,6 @@ import Spinner from './components/Spinner';
 import DefaultLayout from './layouts/DefaultLayout';
 import ErrorDialog from './components/Dialog/ErrorDialog';
 import { handleResetStatus, handleSuccessStatus } from './redux/slices/statusSlice';
-import { getPost } from './api/post/fileService';
 
 export default function App() {
     const dispatch = useAppDispatch();

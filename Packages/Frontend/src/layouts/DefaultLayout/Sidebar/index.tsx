@@ -1,16 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Home, Search, Plus, Heart, User, Menu, Settings, Moon, LogOut, MessageSquareWarning } from 'lucide-react';
 import ActionButton from '@/components/Button/ActionButton';
-import Image from '@/components/Image';
-import { logout } from '@/redux/slices/authSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { authActions } from '@/redux/actions/authActions';
+import { Link } from 'react-router-dom';
+import threadIcon from './thread.svg'
+import Image from '@/components/Image';
 
 export default function Sidebar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const dispatch = useAppDispatch();
-
 
     const handleLogout = async () => {
         await dispatch(authActions.logout());
@@ -28,29 +28,29 @@ export default function Sidebar() {
     }, []);
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-[80px] flex flex-col items-center py-6 border-r border-zinc-200 bg-white z-50 justify-between">
-            {/* 1. Logo */}
+        <aside className="fixed left-0 top-0 h-screen w-20 flex flex-col items-center py-6 border-r border-zinc-200 bg-white z-50 justify-between">
             <div className="mb-10 cursor-pointer">
-                <Image src="/images/ana1.jpg" alt="Logo" className="w-16 h-16 object-contain" />
+                <Link to={'/'} className='flex gap-1'>
+                    <Image src={threadIcon} alt="Logo" className="size-14" />
+                </Link>
             </div>
 
-            {/* 2. Menu chính */}
-            <div className="flex-1 flex flex-col gap-8 flex-col h-full lex-1 justify-center">
+            <div className="flex-1 flex flex-col gap-8 h-full lex-1 justify-center">
                 <ActionButton icon={<Home />} ariaLabel="Home" to="/" variant="active" />
-                <ActionButton icon={<Search />} ariaLabel="Search" to="/search" />
+                {/* <ActionButton icon={<Search />} ariaLabel="Search" to="/search" /> */}
                 <ActionButton
                     icon={<Plus className="bg-zinc-100 rounded-lg p-1 w-8 h-8" />}
                     ariaLabel="Create Post"
                     onClick={() => console.log('Open Create Modal')}
                 />
-                <ActionButton icon={<Heart />} ariaLabel="Activity" to="/activity" />
+                {/* <ActionButton icon={<Heart />} ariaLabel="Activity" to="/activity" /> */}
                 <ActionButton icon={<User />} ariaLabel="Profile" to="/profile" />
             </div>
 
             {/* 3. Nút Menu/Cài đặt dưới cùng với Pop-up */}
             <div className="mt-auto relative" ref={menuRef}>
                 {isMenuOpen && (
-                    <div className="absolute bottom-full left-4 mb-2 w-[240px] bg-white rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-zinc-100 py-2 z-50 animate-in fade-in slide-in-from-bottom-2">
+                    <div className="absolute bottom-full left-4 mb-2 w-60 bg-white rounded-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-zinc-100 py-2 z-50 animate-in fade-in slide-in-from-bottom-2">
                         {/* Các tùy chọn menu chuẩn thiết kế */}
                         <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-zinc-50 transition-colors">
                             <span className="font-medium text-[15px]">Settings</span>
@@ -67,7 +67,7 @@ export default function Sidebar() {
                             <MessageSquareWarning size={18} />
                         </button>
 
-                        <div className="h-[1px] bg-zinc-100 my-1 mx-2" />
+                        <div className="h-px bg-zinc-100 my-1 mx-2" />
 
                         <button onClick={handleLogout} className="w-full flex items-center justify-between px-4 py-3 hover:bg-zinc-50 transition-colors">
                             <span className="font-medium text-[15px]">Log out</span>

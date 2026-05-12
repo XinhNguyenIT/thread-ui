@@ -1,6 +1,7 @@
 import { GenderTypeEnum } from '@/common/genderTypeEnum';
 import { PrivacyTypeEnum } from '@/common/privacyTypeEnum';
 import Posts from './Posts';
+import CreatePostForm from '../Forms/CreatePostForm';
 
 interface PostListProps {
     type: 'recommend' | 'following' | 'ghost';
@@ -68,7 +69,19 @@ const PostList = ({ type }: PostListProps) => {
     return (
         <div className="w-full max-w-175 mx-auto bg-white">
             {/* Render các post */}
-            <Posts />
+            {type == 'recommend' && (
+                <>
+                    <CreatePostForm />
+                    <Posts />
+                </>
+                
+            )}
+
+            {type === 'following' && (
+                <div className="py-20 text-center text-zinc-400">
+                    <p className="italic">Chưa theo dõi ai</p>
+                </div>
+            )}
 
             {/* Hiển thị thông báo khi tab trống */}
             {type === 'ghost' && (

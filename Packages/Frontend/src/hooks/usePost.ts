@@ -19,6 +19,7 @@ export const usePosts = (pageSize: number) => {
         try {
             const data = await getPost({ page: targetPage, pageSize });
             const newPosts = data.data;
+            console.log('Posts data: ', newPosts)
 
             // số lượng bài nhận về < pageSize (4)
             if (newPosts.length < pageSize) {

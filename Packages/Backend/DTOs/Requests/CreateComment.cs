@@ -7,8 +7,8 @@ namespace Backend.DTOs.Requests
 {
 	public class CreateCommentRequest
 	{
-		public int? CommentId { get; set; }
-		public int? PostId { get; set; }
+		public int? CommentId { get; set; } = null;
+		public int? PostId { get; set; } = null;
 		public string content { get; set; }
 	}
 }

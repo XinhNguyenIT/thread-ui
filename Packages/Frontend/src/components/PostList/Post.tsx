@@ -16,7 +16,11 @@ export interface PostProps {
         firstName?: string
         lastName?: string
         gender?: GenderTypeEnum
-        avatarSrc?: string
+        avatar?: {
+            id?: number
+            type?: string
+            src?: string
+        }
     }
     caption?: string
     commentsCount?: number
@@ -55,6 +59,7 @@ const Post = ({
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Tạo 3 chấm xóa bài
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
@@ -65,7 +70,6 @@ const Post = ({
     }, []);
 
     const handleDeletePost = async () => {
-        // Nên có confirm để tránh bấm nhầm
         const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?");
         if (!isConfirm) return;
 
@@ -87,7 +91,7 @@ const Post = ({
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
             {/* Cột trái: Avatar */}
             <div className="flex flex-col items-center gap-2">
-                <Avatar src={author?.avatarSrc} size="lg" />
+                <Avatar src={author?.avatar?.src} size="lg" />
                 <div className="w-0.5 flex-1 bg-zinc-100 rounded-full my-1"></div>
             </div>
 
@@ -143,7 +147,6 @@ const Post = ({
                                                 className="w-full h-full object-cover"
                                             />
                                         }
-                                        
                                     </div>
                                 );
                             })}
@@ -159,21 +162,26 @@ const Post = ({
                             initialIsLiked={isLiked} 
                         />
                     )}
-                    {/* <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" /> */}
-                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
-                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
-
+                    
+                    {/* Mở khung comment */}
                     <ActionButton 
                         icon={<MessageCircle size={12} />} 
                         count={commentsCount} 
                         ariaLabel="Reply" 
-                        onClick={() => setShowComments(!showComments)} // Thêm cái này
+                        onClick={() => setShowComments(!showComments)}
                     />
+
+                    {/* <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" /> */}
+                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
+                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
                 </div>
 
+                {/* Hiện khung comment  */}
                 {showComments && postId && (
                     <CommentSection postId={postId} />
                 )}
+
+
             </div>
         </div>
     );
