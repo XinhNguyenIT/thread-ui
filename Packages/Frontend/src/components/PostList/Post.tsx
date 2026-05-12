@@ -55,6 +55,7 @@ const Post = ({
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Tạo 3 chấm xóa bài
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
@@ -65,7 +66,6 @@ const Post = ({
     }, []);
 
     const handleDeletePost = async () => {
-        // Nên có confirm để tránh bấm nhầm
         const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?");
         if (!isConfirm) return;
 
@@ -159,21 +159,26 @@ const Post = ({
                             initialIsLiked={isLiked} 
                         />
                     )}
-                    {/* <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" /> */}
-                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
-                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
-
+                    
+                    {/* Mở khung comment */}
                     <ActionButton 
                         icon={<MessageCircle size={12} />} 
                         count={commentsCount} 
                         ariaLabel="Reply" 
-                        onClick={() => setShowComments(!showComments)} // Thêm cái này
+                        onClick={() => setShowComments(!showComments)}
                     />
+
+                    {/* <ActionButton icon={<MessageCircle size={12} />} count={commentsCount} ariaLabel="Reply" /> */}
+                    {/* <ActionButton icon={<Repeat2 size={12} />} ariaLabel="Repost" />
+                    <ActionButton icon={<Send size={12} />} ariaLabel="Share" /> */}
                 </div>
 
+                {/* Hiện khung comment  */}
                 {showComments && postId && (
                     <CommentSection postId={postId} />
                 )}
+
+
             </div>
         </div>
     );
