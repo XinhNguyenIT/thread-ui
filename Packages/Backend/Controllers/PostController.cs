@@ -31,6 +31,14 @@ namespace Backend.Controllers
             return Ok(ApiResponse<PostResponse>.SuccessResponse(result, "Post created successfully"));
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> DeletePost([FromQuery] DeletePostRequest request)
+        {
+            await _postService.DeletePost(request);
+
+            return NoContent();
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetPosts([FromQuery] ListPostRequest request)

@@ -2,6 +2,7 @@ using Backend.Background.Queue;
 using Backend.DTOs.Internals;
 using Backend.DTOs.Requests;
 using Backend.DTOs.Responses;
+using Backend.Enums;
 using Backend.Helpers;
 using Backend.Mappers;
 using Backend.Models;
@@ -76,6 +77,18 @@ namespace Backend.Services
 			return response;
 		}
 
+		public async Task DeletePost(DeletePostRequest request)
+		{
+			var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PostId);
+			if (post == null) throw new BadHttpRequestException("Cannot find post by Id");
+
+			var medias = await _unitOfWork.MediaRepository.GetByPostId(request.PostId);
+			post.Medias = medias;
+
+			_unitOfWork.PostRepository.Delete(post);
+			await _unitOfWork.SaveChangesAsync();
+		}
+
 		public async Task<List<PostResponse>> GetPagedPosts(int page = 1, int pageSize = 10)
 		{
 			var userId = _userContext.UserId;
@@ -83,7 +96,13 @@ namespace Backend.Services
 
 			if (posts.Count == 0) return new List<PostResponse>();
 
-			var response = posts.Select(p => _postMapper.ToPostResponse(p)).ToList();
+			var postIds = posts.Select(p => p.PostId);
+
+			var userLikes = await _unitOfWork.LikeRepository.GetLikeByUserIdAndTargetIds(userId, postIds, TargetTypeEnum.POST);
+
+			var LikedPost = userLikes.Select(l => l.TargetId).ToList();
+
+			var response = posts.Select(p => _postMapper.ToPostResponse(p, LikedPost)).ToList();
 
 			return response;
 		}

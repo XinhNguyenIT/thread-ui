@@ -10,6 +10,7 @@ namespace Backend.Services.Interfaces
 	public interface IPostService
 	{
 		public Task<PostResponse> CreatePost(CreatePostRequest request);
+		public Task DeletePost(DeletePostRequest request);
 		public Task<List<PostResponse>> GetPagedPosts(int page = 1, int pageSize = 10);
 	}
 }

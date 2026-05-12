@@ -7,12 +7,15 @@ import CreatePostForm from "@/components/Forms/CreatePostForm";
 import UpdateProfileForm from "@/components/Forms/UpdateProfileForm";
 import { PostProps } from "@/components/PostList/Post";
 import Posts from "@/components/PostList/Posts";
+import UserPosts from "@/components/PostList/UserPosts";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { textNormalize } from "@/utils/textNormalize";
 import { useState } from "react";
 import { BsInstagram } from "react-icons/bs";
 
-const tabs = ["Thread", "Câu trả lời", "File phương tiện", "Bài đăng lại"];
+// const tabs = ["Thread", "Câu trả lời", "File phương tiện", "Bài đăng lại"];
+const tabs = ["Your Posts"];
+
 type Tab = (typeof tabs)[number];
 
 const MOCK_USER_DATA = {
@@ -42,11 +45,15 @@ const MOCK_USER_POST: PostProps[] = [{
 }]
 
 const ProfilePage = () => {
-    const [activeTab, setActiveTab] = useState<Tab>("Thread");
+    // const [activeTab, setActiveTab] = useState<Tab>("Thread");
+    const [activeTab, setActiveTab] = useState<Tab>("Your Posts");
+
     const [isFormOpen, setIsFormOpen] = useState(false);
     
     const userFromStore = useAppSelector((state) => state.auth.information)
     const user = userFromStore || MOCK_USER_DATA;
+
+    console.log("user data: ", user)
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
@@ -110,6 +117,13 @@ const ProfilePage = () => {
 
                     {/* Content */}
                     <div className="min-h-75">
+                        {activeTab === "Your Posts" && (
+                            <div className="py-4">
+                                <CreatePostForm />
+                                <UserPosts />
+                            </div>
+                        )}
+
                         {activeTab === "Thread" && (
                             <div className="py-4">
                                 <CreatePostForm />

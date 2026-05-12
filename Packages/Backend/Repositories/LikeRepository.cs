@@ -68,5 +68,11 @@ namespace Backend.Repositories
 		{
 			throw new NotImplementedException();
 		}
+
+		public async Task<List<Like>> GetLikeByUserIdAndTargetIds(string userId, IEnumerable<int> targetIds, TargetTypeEnum targetType)
+		{
+			return await _context.Likes.Where(l => l.UserId == userId && targetIds.Contains(l.TargetId) && l.TargetType == targetType)
+							.ToListAsync();
+		}
 	}
 }
