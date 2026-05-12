@@ -16,7 +16,11 @@ export interface PostProps {
         firstName?: string
         lastName?: string
         gender?: GenderTypeEnum
-        avatarSrc?: string
+        avatar?: {
+            id?: number
+            type?: string
+            src?: string
+        }
     }
     caption?: string
     commentsCount?: number
@@ -87,7 +91,7 @@ const Post = ({
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
             {/* Cột trái: Avatar */}
             <div className="flex flex-col items-center gap-2">
-                <Avatar src={author?.avatarSrc} size="lg" />
+                <Avatar src={author?.avatar?.src} size="lg" />
                 <div className="w-0.5 flex-1 bg-zinc-100 rounded-full my-1"></div>
             </div>
 
@@ -143,7 +147,6 @@ const Post = ({
                                                 className="w-full h-full object-cover"
                                             />
                                         }
-                                        
                                     </div>
                                 );
                             })}

@@ -33,7 +33,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
     return (
         <div className="mt-2 bg-zinc-50/50 rounded-xl border border-zinc-100 overflow-hidden flex flex-col">
             {/* Khung hiển thị danh sách comment */}
-            <div className="max-h-[300px] overflow-y-auto p-3 space-y-4 scrollbar-thin">
+            <div className="max-h-75 overflow-y-auto p-3 space-y-4 scrollbar-thin">
                 {isLoading ? (
                     <div className="flex justify-center py-4">
                         <Loader2 className="animate-spin text-zinc-400" size={20} />
