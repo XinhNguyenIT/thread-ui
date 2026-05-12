@@ -1,13 +1,14 @@
 import Avatar from '@/components/Avatar';
 import ActionButton from '@/components/Button/ActionButton';
 import Image from '@/components/Image';
-import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, Send, MoreHorizontal, Trash2, Edit3, UserMinus, Flag } from 'lucide-react';
 import { GenderTypeEnum } from "@/common/genderTypeEnum"
 import { PrivacyTypeEnum } from "@/common/privacyTypeEnum"
 import { formatPostTime } from '@/utils/timeFormat';
 import LikeButton from './LikeButton';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CommentSection from './CommentSection';
+import { deletePost } from '@/api/post/fileService';
 
 export interface PostProps {
     author?: {
@@ -50,7 +51,38 @@ const Post = ({
 }: PostProps) => {
 
     const [showComments, setShowComments] = useState(false);
-    
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleDeletePost = async () => {
+        // Nên có confirm để tránh bấm nhầm
+        const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?");
+        if (!isConfirm) return;
+
+        console.log("Post id", postId)
+        try {
+            await deletePost(postId!); 
+        
+            alert("Xóa bài viết thành công!");
+            window.location.reload(); 
+        } catch (error) {
+            console.error("Lỗi khi xóa post:", error);
+            alert("Xóa thất bại, vui lòng thử lại.");
+        } finally {
+            setIsMenuOpen(false); // Đóng menu lại
+        }
+    };
+
     return (
         <div className="flex gap-3 p-4 border-b border-zinc-100 hover:bg-zinc-50/30 transition-colors">
             {/* Cột trái: Avatar */}
@@ -66,9 +98,25 @@ const Post = ({
                         <span className="font-bold text-[15px] hover:underline cursor-pointer">{author?.lastName} {author?.firstName}</span>
                         <span className="text-zinc-400 text-[14px]">{createAt ? formatPostTime(createAt) : ''}</span>
                     </div>
-                    <button className="text-zinc-400 hover:text-black">
-                        <MoreHorizontal size={18} />
-                    </button>
+                    
+                    <div className="relative" ref={menuRef}>
+                        <button 
+                            className={`p-2 rounded-full transition-colors ${isMenuOpen ? 'bg-zinc-100 text-black' : 'text-zinc-400 hover:text-black hover:bg-zinc-100'}`}
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        >
+                            <MoreHorizontal size={18} />
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {isMenuOpen && (
+                            <div className="absolute right-0 mt-1 w-56 bg-white border border-zinc-100 rounded-xl shadow-xl z-50 py-2 animate-in fade-in zoom-in duration-150">
+                                <button onClick={handleDeletePost} className="w-full px-4 py-2.5 text-left text-[14px] font-semibold flex items-center gap-3 hover:bg-zinc-50 transition-colors text-red-600">
+                                    <Trash2 size={18} />
+                                    Xóa bài viết
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <p className="text-[15px] text-[#1c1e21] leading-relaxed whitespace-pre-wrap">{caption}</p>
